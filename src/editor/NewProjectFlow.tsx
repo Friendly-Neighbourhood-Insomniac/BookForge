@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -63,7 +63,7 @@ const NewProjectFlow: React.FC = () => {
     }
   };
 
-  const canProceed = () => {
+  const isStepValid = useMemo(() => {
     switch (currentStep) {
       case 1:
         return selectedProjectType !== null && bookTitle.trim().length > 0;
@@ -71,12 +71,10 @@ const NewProjectFlow: React.FC = () => {
         return selectedCover !== null;
       case 3:
         return selectedTemplate !== null;
-      case 4:
-        return true;
       default:
-        return false;
+        return true;
     }
-  };
+  }, [currentStep, selectedProjectType, bookTitle, selectedCover, selectedTemplate]);
 
   const handleProjectTypeSelect = (type: 'textbook' | 'workbook') => {
     setSelectedProjectType(type);
@@ -145,17 +143,6 @@ const NewProjectFlow: React.FC = () => {
       setLoading(false);
     }
   };
-
-  // Debug validation for step 1
-  const validStep1 = selectedProjectType !== null && bookTitle.trim().length > 0;
-
-  // Debug logs
-  console.log('canProceed():', canProceed());
-  console.log('selectedProjectType:', selectedProjectType);
-  console.log('bookTitle:', bookTitle);
-  console.log('validStep1:', validStep1);
-  console.log('currentStep:', currentStep);
-  console.log('loading:', loading);
 
   const stepVariants = {
     enter: (direction: number) => ({
@@ -727,14 +714,14 @@ const NewProjectFlow: React.FC = () => {
           {currentStep < totalSteps ? (
             <motion.button
               onClick={nextStep}
-              disabled={currentStep === 1 ? !validStep1 || loading : !canProceed() || loading}
+              disabled={!isStepValid || loading}
               className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-inter font-bold transition-all duration-300 ${
-                (currentStep === 1 ? validStep1 && !loading : canProceed() && !loading)
+                isStepValid && !loading
                   ? 'bg-brass-gradient text-white hover:shadow-cyan-glow transform hover:-translate-y-1 border-2 border-brass-light/50'
                   : 'bg-brass/30 text-porcelain/40 cursor-not-allowed'
               }`}
-              whileHover={(currentStep === 1 ? validStep1 && !loading : canProceed() && !loading) ? { scale: 1.05 } : {}}
-              whileTap={(currentStep === 1 ? validStep1 && !loading : canProceed() && !loading) ? { scale: 0.95 } : {}}
+              whileHover={isStepValid && !loading ? { scale: 1.05 } : {}}
+              whileTap={isStepValid && !loading ? { scale: 0.95 } : {}}
             >
               <span>Next</span>
               <ArrowRight className="h-4 w-4" />
