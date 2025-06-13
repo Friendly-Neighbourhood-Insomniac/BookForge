@@ -63,18 +63,18 @@ const NewProjectFlow: React.FC = () => {
     }
   };
 
-  const isStepValid = useMemo(() => {
-    switch (currentStep) {
-      case 1:
-        return selectedProjectType !== null && bookTitle.trim().length > 0;
-      case 2:
-        return selectedCover !== null;
-      case 3:
-        return selectedTemplate !== null;
-      default:
-        return true;
-    }
-  }, [currentStep, selectedProjectType, bookTitle, selectedCover, selectedTemplate]);
+ // Determine if the "Next" button should be enabled based on the current step
+  // and the data entered so far. Using a simple expression instead of `useMemo`
+  // avoids potential stale state issues where the memoized value might not
+  // update after state changes.
+  const isStepValid =
+    currentStep === 1
+      ? selectedProjectType !== null && bookTitle.trim().length > 0
+      : currentStep === 2
+        ? selectedCover !== null
+        : currentStep === 3
+          ? selectedTemplate !== null
+          : true;
 
   const handleProjectTypeSelect = (type: 'textbook' | 'workbook') => {
     setSelectedProjectType(type);
