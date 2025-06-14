@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate, useBlocker } from 'react-router-dom';
 import { useEditorStore } from '../store/editorStore';
 import { supabase } from '../utils/supabase';
+import { GlobalBackground } from '../components/ClockEdUI';
 import EditorHeader from './components/EditorHeader';
 import PageSidebar from './components/PageSidebar';
 import EditorCanvas from './components/EditorCanvas';
@@ -162,10 +163,13 @@ const EditorPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-dark-bronze flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brass mx-auto mb-4"></div>
-          <p className="text-porcelain">Loading editor...</p>
+      <div className="min-h-screen bg-porcelain relative overflow-hidden">
+        <GlobalBackground />
+        <div className="relative z-10 flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brass mx-auto mb-4"></div>
+            <p className="text-dark-bronze font-inter">Loading editor...</p>
+          </div>
         </div>
       </div>
     );
@@ -173,21 +177,24 @@ const EditorPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-dark-bronze flex items-center justify-center">
-        <div className="text-center">
-          <div className="bg-red-500 rounded-full p-4 mb-4 inline-block">
-            <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-            </svg>
+      <div className="min-h-screen bg-porcelain relative overflow-hidden">
+        <GlobalBackground />
+        <div className="relative z-10 flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="bg-red-500 rounded-full p-4 mb-4 inline-block">
+              <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-dark-bronze mb-2">Error Loading Project</h2>
+            <p className="text-dark-bronze/80 mb-4">{error}</p>
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="bg-brass-gradient text-white px-6 py-2 rounded-lg hover:shadow-brass-glow transition-all duration-300"
+            >
+              Back to Dashboard
+            </button>
           </div>
-          <h2 className="text-xl font-bold text-porcelain mb-2">Error Loading Project</h2>
-          <p className="text-porcelain/80 mb-4">{error}</p>
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="bg-brass-gradient text-white px-6 py-2 rounded-lg hover:shadow-brass-glow transition-all duration-300"
-          >
-            Back to Dashboard
-          </button>
         </div>
       </div>
     );
@@ -195,26 +202,31 @@ const EditorPage: React.FC = () => {
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-dark-bronze flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-porcelain">No project found</p>
+      <div className="min-h-screen bg-porcelain relative overflow-hidden">
+        <GlobalBackground />
+        <div className="relative z-10 flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <p className="text-dark-bronze font-inter">No project found</p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-dark-bronze flex flex-col">
+    <div className="min-h-screen bg-porcelain flex flex-col relative overflow-hidden">
+      <GlobalBackground />
+      
       <EditorHeader 
         onTogglePageSidebar={() => setIsPageSidebarOpen(!isPageSidebarOpen)}
         onTogglePropertiesPanel={() => setIsPropertiesPanelOpen(!isPropertiesPanelOpen)}
       />
       
-      <div className="flex flex-1 overflow-hidden relative">
+      <div className="flex flex-1 overflow-hidden relative z-10">
         {/* Mobile backdrop */}
         {(isPageSidebarOpen || isPropertiesPanelOpen) && (
           <div 
-            className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+            className="fixed inset-0 bg-dark-bronze/50 z-30 lg:hidden backdrop-blur-sm"
             onClick={() => {
               setIsPageSidebarOpen(false);
               setIsPropertiesPanelOpen(false);

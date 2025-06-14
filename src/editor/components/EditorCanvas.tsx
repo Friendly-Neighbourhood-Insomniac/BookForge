@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Grid, Ruler, Eye, EyeOff } from 'lucide-react';
+import { Grid, Ruler, Eye, EyeOff, Cog, Settings } from 'lucide-react';
 import { useEditorStore } from '../../store/editorStore';
+import { FrostedGlassPanel, CrystalButton } from '../../components/ClockEdUI';
 import DraggableComponent from './DraggableComponent';
 
 const EditorCanvas: React.FC = () => {
@@ -52,7 +53,7 @@ const EditorCanvas: React.FC = () => {
           y1={0}
           x2={x}
           y2={CANVAS_HEIGHT}
-          stroke="rgba(212, 175, 55, 0.3)"
+          stroke="rgba(0, 234, 255, 0.3)"
           strokeWidth="1"
           strokeDasharray="2,2"
         />
@@ -68,7 +69,7 @@ const EditorCanvas: React.FC = () => {
           y1={y}
           x2={CANVAS_WIDTH}
           y2={y}
-          stroke="rgba(212, 175, 55, 0.3)"
+          stroke="rgba(0, 234, 255, 0.3)"
           strokeWidth="1"
           strokeDasharray="2,2"
         />
@@ -105,19 +106,19 @@ const EditorCanvas: React.FC = () => {
           width={CANVAS_WIDTH - (MARGIN_SIZE * 2)}
           height={CANVAS_HEIGHT - (MARGIN_SIZE * 2)}
           fill="none"
-          stroke="rgba(0, 240, 255, 0.6)"
+          stroke="rgba(0, 234, 255, 0.6)"
           strokeWidth="2"
           strokeDasharray="5,5"
         />
         
         {/* Corner markers */}
-        <circle cx={MARGIN_SIZE} cy={MARGIN_SIZE} r="3" fill="rgba(0, 240, 255, 0.8)" />
-        <circle cx={CANVAS_WIDTH - MARGIN_SIZE} cy={MARGIN_SIZE} r="3" fill="rgba(0, 240, 255, 0.8)" />
-        <circle cx={MARGIN_SIZE} cy={CANVAS_HEIGHT - MARGIN_SIZE} r="3" fill="rgba(0, 240, 255, 0.8)" />
-        <circle cx={CANVAS_WIDTH - MARGIN_SIZE} cy={CANVAS_HEIGHT - MARGIN_SIZE} r="3" fill="rgba(0, 240, 255, 0.8)" />
+        <circle cx={MARGIN_SIZE} cy={MARGIN_SIZE} r="3" fill="rgba(0, 234, 255, 0.8)" />
+        <circle cx={CANVAS_WIDTH - MARGIN_SIZE} cy={MARGIN_SIZE} r="3" fill="rgba(0, 234, 255, 0.8)" />
+        <circle cx={MARGIN_SIZE} cy={CANVAS_HEIGHT - MARGIN_SIZE} r="3" fill="rgba(0, 234, 255, 0.8)" />
+        <circle cx={CANVAS_WIDTH - MARGIN_SIZE} cy={CANVAS_HEIGHT - MARGIN_SIZE} r="3" fill="rgba(0, 234, 255, 0.8)" />
         
         {/* Margin labels */}
-        <text x={MARGIN_SIZE + 5} y={MARGIN_SIZE - 5} fill="rgba(0, 240, 255, 0.8)" fontSize="10" fontFamily="Inter">
+        <text x={MARGIN_SIZE + 5} y={MARGIN_SIZE - 5} fill="rgba(0, 234, 255, 0.8)" fontSize="10" fontFamily="Inter">
           Safe Area
         </text>
       </svg>
@@ -187,7 +188,7 @@ const EditorCanvas: React.FC = () => {
           className="absolute top-0 left-0 pointer-events-none z-20"
           width={CANVAS_WIDTH}
           height="20"
-          style={{ backgroundColor: 'rgba(212, 175, 55, 0.1)' }}
+          style={{ backgroundColor: 'rgba(248, 249, 251, 0.8)' }}
         >
           {horizontalMarks}
         </svg>
@@ -197,7 +198,7 @@ const EditorCanvas: React.FC = () => {
           className="absolute top-0 left-0 pointer-events-none z-20"
           width="20"
           height={CANVAS_HEIGHT}
-          style={{ backgroundColor: 'rgba(212, 175, 55, 0.1)' }}
+          style={{ backgroundColor: 'rgba(248, 249, 251, 0.8)' }}
         >
           {verticalMarks}
         </svg>
@@ -207,64 +208,55 @@ const EditorCanvas: React.FC = () => {
 
   if (!activePage) {
     return (
-      <div className="flex-1 bg-dark-bronze flex items-center justify-center">
-        <div className="text-center text-porcelain/60">
-          <p>No page selected</p>
-        </div>
+      <div className="flex-1 bg-porcelain flex items-center justify-center">
+        <FrostedGlassPanel className="p-8" glowColor="aurora">
+          <div className="text-center text-dark-bronze/60">
+            <p className="font-inter">No page selected</p>
+          </div>
+        </FrostedGlassPanel>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 bg-dark-bronze p-4 sm:p-8 overflow-auto">
+    <div className="flex-1 bg-porcelain p-4 sm:p-8 overflow-auto relative">
       {/* Canvas Controls */}
-      <div className="flex justify-center mb-4">
-        <div className="flex items-center space-x-1 sm:space-x-2 bg-cracked-porcelain/95 backdrop-blur-md rounded-xl p-2 border border-brass/30">
-          <button
+      <div className="flex justify-center mb-4 relative z-20">
+        <FrostedGlassPanel className="flex items-center space-x-1 sm:space-x-2 p-2" borderStyle="crystal">
+          <CrystalButton
             onClick={() => setShowGrid(!showGrid)}
-            className={`flex items-center space-x-1 px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
-              showGrid
-                ? 'bg-brass-gradient text-white shadow-brass'
-                : 'text-dark-bronze hover:bg-brass/10'
-            }`}
-            title="Toggle Grid"
+            variant={showGrid ? "primary" : "ghost"}
+            size="sm"
+            icon={Grid}
           >
-            <Grid className="h-4 w-4" />
             <span className="hidden sm:inline">Grid</span>
-          </button>
+          </CrystalButton>
           
-          <button
+          <CrystalButton
             onClick={() => setShowMargins(!showMargins)}
-            className={`flex items-center space-x-1 px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
-              showMargins
-                ? 'bg-gradient-to-r from-neon-cyan to-brass text-white shadow-cyan-glow'
-                : 'text-dark-bronze hover:bg-brass/10'
-            }`}
-            title="Toggle Safe Area"
+            variant={showMargins ? "secondary" : "ghost"}
+            size="sm"
+            icon={showMargins ? Eye : EyeOff}
+            className={showMargins ? "border-neon-cyan/30" : ""}
           >
-            {showMargins ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
             <span className="hidden sm:inline">Safe Area</span>
-          </button>
+          </CrystalButton>
           
-          <button
+          <CrystalButton
             onClick={() => setShowRulers(!showRulers)}
-            className={`flex items-center space-x-1 px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
-              showRulers
-                ? 'bg-brass-gradient text-white shadow-brass'
-                : 'text-dark-bronze hover:bg-brass/10'
-            }`}
-            title="Toggle Rulers"
+            variant={showRulers ? "primary" : "ghost"}
+            size="sm"
+            icon={Ruler}
           >
-            <Ruler className="h-4 w-4" />
             <span className="hidden sm:inline">Rulers</span>
-          </button>
-        </div>
+          </CrystalButton>
+        </FrostedGlassPanel>
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center relative z-10">
         <motion.div
           ref={canvasRef}
-          className="relative bg-porcelain rounded-2xl shadow-porcelain border-4 border-brass/30 overflow-hidden"
+          className="relative bg-porcelain-gradient rounded-2xl shadow-frost-glass border-4 border-neon-cyan/20 overflow-hidden"
           style={{
             width: `${CANVAS_WIDTH}px`,
             height: `${CANVAS_HEIGHT}px`,
@@ -276,16 +268,19 @@ const EditorCanvas: React.FC = () => {
           transition={{ duration: 0.3 }}
         >
           {/* Canvas Background Pattern */}
-          <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0 bg-frost-texture opacity-20">
             <div className="absolute top-0 left-1/3 w-px h-full bg-gradient-to-b from-neon-cyan/30 via-transparent to-neon-cyan/30"></div>
             <div className="absolute top-1/3 right-1/4 w-full h-px bg-gradient-to-r from-transparent via-neon-cyan/20 to-transparent"></div>
           </div>
 
           {/* Page Title */}
           <div className="absolute top-4 left-4 right-4 z-10">
-            <div className="bg-brass-gradient px-4 py-2 rounded-lg shadow-brass">
-              <h2 className="text-white font-cinzel font-bold text-sm sm:text-lg">{activePage.title}</h2>
-            </div>
+            <FrostedGlassPanel className="px-4 py-2" glowColor="brass" borderStyle="embossed">
+              <h2 className="text-dark-bronze font-cinzel font-bold text-sm sm:text-lg flex items-center space-x-2">
+                <Cog className="h-4 w-4 text-brass animate-spin-slow" />
+                <span>{activePage.title}</span>
+              </h2>
+            </FrostedGlassPanel>
           </div>
 
           {/* Grid Overlay */}
@@ -316,19 +311,17 @@ const EditorCanvas: React.FC = () => {
             {/* Empty State */}
             {activePage.components.length === 0 && (
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center text-dark-bronze/40">
-                  <div className="w-16 h-16 bg-brass/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FrostedGlassPanel className="p-8 text-center" glowColor="aurora" hasGearCorner>
+                  <div className="w-16 h-16 bg-brass/20 rounded-full flex items-center justify-center mx-auto mb-4">
                     <motion.div
                       animate={{ rotate: 360 }}
                       transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                     >
-                      <svg className="w-8 h-8 text-brass" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
-                      </svg>
+                      <Settings className="w-8 h-8 text-brass" />
                     </motion.div>
                   </div>
-                  <p className="font-inter text-sm sm:text-base">Click a tool to add components</p>
-                </div>
+                  <p className="font-inter text-sm sm:text-base text-dark-bronze/60">Click a tool to add components</p>
+                </FrostedGlassPanel>
               </div>
             )}
           </div>

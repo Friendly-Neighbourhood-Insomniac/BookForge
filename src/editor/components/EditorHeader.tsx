@@ -18,6 +18,7 @@ import {
   Sliders
 } from 'lucide-react';
 import { useEditorStore } from '../../store/editorStore';
+import { FrostedGlassPanel, CrystalButton } from '../../components/ClockEdUI';
 import FlipbookPreviewModal from './FlipbookPreviewModal';
 
 interface EditorHeaderProps {
@@ -49,172 +50,157 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
   const getSaveButtonContent = () => {
     switch (saveStatus) {
       case 'saving':
-        return (
-          <>
-            <Clock className="h-4 w-4 animate-spin" />
-            <span className="hidden sm:inline">Saving...</span>
-          </>
-        );
+        return {
+          icon: Clock,
+          text: 'Saving...',
+          variant: 'secondary' as const
+        };
       case 'saved':
-        return (
-          <>
-            <CheckCircle className="h-4 w-4" />
-            <span className="hidden sm:inline">Saved</span>
-          </>
-        );
+        return {
+          icon: CheckCircle,
+          text: 'Saved',
+          variant: 'secondary' as const
+        };
       case 'error':
-        return (
-          <>
-            <AlertCircle className="h-4 w-4" />
-            <span className="hidden sm:inline">Error</span>
-          </>
-        );
+        return {
+          icon: AlertCircle,
+          text: 'Error',
+          variant: 'danger' as const
+        };
       default:
-        return (
-          <>
-            <Save className="h-4 w-4" />
-            <span className="hidden sm:inline">Save</span>
-          </>
-        );
+        return {
+          icon: Save,
+          text: 'Save',
+          variant: 'primary' as const
+        };
     }
   };
 
-  const getSaveButtonStyle = () => {
-    switch (saveStatus) {
-      case 'saved':
-        return 'bg-gradient-to-r from-green-500 to-green-600 text-white';
-      case 'error':
-        return 'bg-gradient-to-r from-red-500 to-red-600 text-white';
-      default:
-        return 'bg-brass-gradient hover:shadow-cyan-glow text-white';
-    }
-  };
+  const saveButton = getSaveButtonContent();
 
   return (
     <>
-      <header className="bg-cracked-porcelain/95 backdrop-blur-md shadow-porcelain border-b-2 border-brass/30 relative z-50">
-        {/* Crack effects */}
-        <div className="absolute inset-0 bg-cracked-porcelain opacity-50"></div>
-        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-neon-cyan/20 via-transparent to-neon-cyan/20"></div>
-        
-        <div className="relative z-10 max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Left Section */}
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              {/* Mobile sidebar toggles */}
-              <div className="flex items-center space-x-1 lg:hidden">
-                <button
-                  onClick={onTogglePageSidebar}
-                  className="p-2 text-dark-bronze hover:text-brass transition-colors rounded-lg hover:bg-brass/10"
-                  title="Toggle Pages"
-                >
-                  <Menu className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={onTogglePropertiesPanel}
-                  className="p-2 text-dark-bronze hover:text-brass transition-colors rounded-lg hover:bg-brass/10"
-                  title="Toggle Properties"
-                >
-                  <Sliders className="h-5 w-5" />
-                </button>
-              </div>
-
-              <Link 
-                to="/dashboard" 
-                className="flex items-center space-x-2 text-dark-bronze hover:text-brass transition-colors group"
-              >
-                <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
-                <span className="font-inter font-medium hidden sm:inline">Dashboard</span>
-              </Link>
-              
-              <div className="flex items-center space-x-2 sm:space-x-3">
-                <div className="relative">
-                  <Cog className="h-5 w-5 sm:h-6 sm:w-6 text-brass animate-spin-slow" />
-                  <div className="absolute inset-0 h-5 w-5 sm:h-6 sm:w-6 bg-brass/20 rounded-full blur-sm"></div>
+      <header className="relative z-50 border-b border-glass-white/20">
+        <FrostedGlassPanel className="rounded-none border-0 border-b border-neon-cyan/20">
+          <div className="relative z-10 max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              {/* Left Section */}
+              <div className="flex items-center space-x-2 sm:space-x-4">
+                {/* Mobile sidebar toggles */}
+                <div className="flex items-center space-x-1 lg:hidden">
+                  <CrystalButton
+                    variant="ghost"
+                    size="sm"
+                    icon={Menu}
+                    onClick={onTogglePageSidebar}
+                  />
+                  <CrystalButton
+                    variant="ghost"
+                    size="sm"
+                    icon={Sliders}
+                    onClick={onTogglePropertiesPanel}
+                  />
                 </div>
-                <div className="text-dark-bronze min-w-0">
-                  <span className="text-sm sm:text-lg font-cinzel font-bold truncate block max-w-[120px] sm:max-w-none">
-                    {project?.title || 'Untitled Book'}
-                  </span>
-                  {unsavedChanges && (
-                    <span className="text-xs bg-neon-cyan/20 text-neon-cyan px-2 py-1 rounded-full hidden sm:inline">
-                      Unsaved changes
+
+                <Link to="/dashboard">
+                  <CrystalButton variant="ghost" size="sm" icon={ArrowLeft}>
+                    <span className="hidden sm:inline">Dashboard</span>
+                  </CrystalButton>
+                </Link>
+                
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="relative">
+                    <Cog className="h-5 w-5 sm:h-6 sm:w-6 text-brass animate-spin-slow" />
+                    <div className="absolute inset-0 h-5 w-5 sm:h-6 sm:w-6 bg-brass/20 rounded-full blur-sm"></div>
+                  </div>
+                  <div className="text-dark-bronze min-w-0">
+                    <span className="text-sm sm:text-lg font-cinzel font-bold truncate block max-w-[120px] sm:max-w-none">
+                      {project?.title || 'Untitled Book'}
                     </span>
-                  )}
+                    {unsavedChanges && (
+                      <span className="text-xs bg-neon-cyan/20 text-neon-cyan px-2 py-1 rounded-full hidden sm:inline font-inter">
+                        Unsaved changes
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Center Section - Undo/Redo (hidden on mobile) */}
-            <div className="hidden md:flex items-center space-x-2">
-              <motion.button
-                onClick={undo}
-                disabled={undoStack.length === 0}
-                className={`p-2 rounded-lg transition-colors ${
-                  undoStack.length > 0
-                    ? 'text-dark-bronze hover:text-brass hover:bg-brass/10'
-                    : 'text-dark-bronze/30 cursor-not-allowed'
-                }`}
-                title="Undo (Ctrl+Z)"
-                whileHover={undoStack.length > 0 ? { scale: 1.1 } : {}}
-                whileTap={undoStack.length > 0 ? { scale: 0.9 } : {}}
-              >
-                <Undo className="h-5 w-5" />
-              </motion.button>
-              
-              <motion.button
-                onClick={redo}
-                disabled={redoStack.length === 0}
-                className={`p-2 rounded-lg transition-colors ${
-                  redoStack.length > 0
-                    ? 'text-dark-bronze hover:text-brass hover:bg-brass/10'
-                    : 'text-dark-bronze/30 cursor-not-allowed'
-                }`}
-                title="Redo (Ctrl+Y)"
-                whileHover={redoStack.length > 0 ? { scale: 1.1 } : {}}
-                whileTap={redoStack.length > 0 ? { scale: 0.9 } : {}}
-              >
-                <Redo className="h-5 w-5" />
-              </motion.button>
-            </div>
+              {/* Center Section - Undo/Redo (hidden on mobile) */}
+              <div className="hidden md:flex items-center space-x-2">
+                <FrostedGlassPanel className="flex items-center space-x-1 p-1" borderStyle="crystal">
+                  <motion.button
+                    onClick={undo}
+                    disabled={undoStack.length === 0}
+                    className={`p-2 rounded-lg transition-colors ${
+                      undoStack.length > 0
+                        ? 'text-dark-bronze hover:text-brass hover:bg-glass-gradient'
+                        : 'text-dark-bronze/30 cursor-not-allowed'
+                    }`}
+                    title="Undo (Ctrl+Z)"
+                    whileHover={undoStack.length > 0 ? { scale: 1.1 } : {}}
+                    whileTap={undoStack.length > 0 ? { scale: 0.9 } : {}}
+                  >
+                    <Undo className="h-5 w-5" />
+                  </motion.button>
+                  
+                  <motion.button
+                    onClick={redo}
+                    disabled={redoStack.length === 0}
+                    className={`p-2 rounded-lg transition-colors ${
+                      redoStack.length > 0
+                        ? 'text-dark-bronze hover:text-brass hover:bg-glass-gradient'
+                        : 'text-dark-bronze/30 cursor-not-allowed'
+                    }`}
+                    title="Redo (Ctrl+Y)"
+                    whileHover={redoStack.length > 0 ? { scale: 1.1 } : {}}
+                    whileTap={redoStack.length > 0 ? { scale: 0.9 } : {}}
+                  >
+                    <Redo className="h-5 w-5" />
+                  </motion.button>
+                </FrostedGlassPanel>
+              </div>
 
-            {/* Right Section */}
-            <div className="flex items-center space-x-1 sm:space-x-3">
-              <button 
-                className="p-2 text-dark-bronze hover:text-brass transition-colors rounded-lg hover:bg-brass/10 hidden sm:block"
-                title="Settings"
-              >
-                <Settings className="h-5 w-5" />
-              </button>
-              
-              <button
-                onClick={() => setShowPreviewModal(true)}
-                className="flex items-center space-x-1 sm:space-x-2 bg-gradient-to-r from-neon-cyan to-brass hover:shadow-cyan-glow text-white px-2 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 shadow-brass border border-neon-cyan/30"
-              >
-                <Play className="h-4 w-4" />
-                <span className="hidden sm:inline">Flipbook Preview</span>
-              </button>
-              
-              <Link
-                to={`/preview/${project?.id}`}
-                className="flex items-center space-x-1 sm:space-x-2 bg-porcelain-gradient hover:bg-brass/10 text-dark-bronze px-2 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 shadow-porcelain border border-brass/20 hover:shadow-brass-glow"
-              >
-                <Eye className="h-4 w-4" />
-                <span className="hidden sm:inline">Preview</span>
-              </Link>
-              
-              <motion.button
-                onClick={handleSave}
-                disabled={saveStatus === 'saving'}
-                className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 shadow-brass border-2 border-brass-light/50 ${getSaveButtonStyle()}`}
-                whileHover={{ scale: saveStatus === 'saving' ? 1 : 1.05 }}
-                whileTap={{ scale: saveStatus === 'saving' ? 1 : 0.95 }}
-              >
-                {getSaveButtonContent()}
-              </motion.button>
+              {/* Right Section */}
+              <div className="flex items-center space-x-1 sm:space-x-3">
+                <div className="hidden sm:block">
+                  <CrystalButton variant="ghost" size="sm" icon={Settings} />
+                </div>
+                
+                <CrystalButton
+                  onClick={() => setShowPreviewModal(true)}
+                  variant="secondary"
+                  size="sm"
+                  icon={Play}
+                  className="border-neon-cyan/30 hover:border-neon-cyan/60"
+                >
+                  <span className="hidden sm:inline">Flipbook</span>
+                </CrystalButton>
+                
+                <Link to={`/preview/${project?.id}`}>
+                  <CrystalButton
+                    variant="ghost"
+                    size="sm"
+                    icon={Eye}
+                  >
+                    <span className="hidden sm:inline">Preview</span>
+                  </CrystalButton>
+                </Link>
+                
+                <CrystalButton
+                  onClick={handleSave}
+                  disabled={saveStatus === 'saving'}
+                  variant={saveButton.variant}
+                  size="sm"
+                  icon={saveButton.icon}
+                  hasGearEffect={saveStatus === 'idle'}
+                >
+                  <span className="hidden sm:inline">{saveButton.text}</span>
+                </CrystalButton>
+              </div>
             </div>
           </div>
-        </div>
+        </FrostedGlassPanel>
       </header>
 
       {/* Flipbook Preview Modal */}
