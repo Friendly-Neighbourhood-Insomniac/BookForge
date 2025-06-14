@@ -127,10 +127,10 @@ const LandingPage: React.FC = () => {
                 borderStyle="embossed"
                 hasGearCorner
               >
-                {/* Floating Crystal Icon - Updated with custom image */}
-                <div className="absolute -top-6 left-8 w-16 h-16 bg-brass-gradient rounded-2xl flex items-center justify-center shadow-brass-glow border-4 border-neon-cyan/20 group-hover:animate-gear-pulse overflow-hidden">
+                {/* Floating Crystal Icon - Updated with transparent background and PNG */}
+                <div className="absolute -top-6 left-8 w-16 h-16 rounded-2xl flex items-center justify-center shadow-brass-glow border-4 border-neon-cyan/20 group-hover:animate-gear-pulse overflow-hidden">
                   <img 
-                    src="/src/components/ClockEdUI/Icons/TextBook_Icon.jpg" 
+                    src="/src/components/ClockEdUI/Icons/TextBook_Icon.png" 
                     alt="Textbook Icon" 
                     className="w-12 h-12 object-contain"
                   />
