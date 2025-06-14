@@ -122,22 +122,24 @@ const LandingPage: React.FC = () => {
             {/* Textbooks Card */}
             <div className="group relative">
               <FrostedGlassPanel 
-                className="p-8 transform hover:-translate-y-4 hover:scale-105 transition-all duration-500" 
+                className="p-8 transform hover:-translate-y-4 hover:scale-105 transition-all duration-500 text-center" 
                 glowColor="brass" 
                 borderStyle="embossed"
                 hasGearCorner
               >
-                {/* Floating Crystal Icon - Updated with transparent background and PNG */}
-                <div className="absolute -top-6 left-8 w-16 h-16 rounded-2xl flex items-center justify-center shadow-brass-glow border-4 border-neon-cyan/20 group-hover:animate-gear-pulse overflow-hidden">
-                  <img 
-                    src="/src/components/ClockEdUI/Icons/TextBook_Icon.png" 
-                    alt="Textbook Icon" 
-                    className="w-24 h-24 object-contain"
-                  />
+                {/* Centered Large Icon */}
+                <div className="flex justify-center mb-6">
+                  <div className="flex items-center justify-center group-hover:animate-gear-pulse">
+                    <img 
+                      src="/src/components/ClockEdUI/Icons/TextBook_Icon.png" 
+                      alt="Textbook Icon" 
+                      className="w-48 h-48 object-contain"
+                    />
+                  </div>
                 </div>
                 
-                <div className="pt-8">
-                  <h3 className="text-2xl font-cinzel font-bold text-dark-bronze mb-4 flex items-center space-x-2">
+                <div>
+                  <h3 className="text-2xl font-cinzel font-bold text-dark-bronze mb-4 flex items-center justify-center space-x-2">
                     <span>Textbooks</span>
                     <div className="w-2 h-2 bg-brass rounded-full animate-pulse"></div>
                   </h3>
@@ -154,18 +156,24 @@ const LandingPage: React.FC = () => {
             {/* Gamification Card */}
             <div className="group relative">
               <FrostedGlassPanel 
-                className="p-8 transform hover:-translate-y-4 hover:scale-105 transition-all duration-500" 
+                className="p-8 transform hover:-translate-y-4 hover:scale-105 transition-all duration-500 text-center" 
                 glowColor="cyan" 
                 borderStyle="crystal"
                 hasGearCorner
               >
-                {/* Floating Crystal Icon */}
-                <div className="absolute -top-6 left-8 w-16 h-16 bg-gradient-to-br from-neon-cyan to-brass rounded-2xl flex items-center justify-center shadow-cyan-glow border-4 border-brass/20 group-hover:animate-gear-pulse">
-                  <Zap className="h-8 w-8 text-white" />
+                {/* Centered Large Icon */}
+                <div className="flex justify-center mb-6">
+                  <div className="flex items-center justify-center group-hover:animate-gear-pulse">
+                    <img 
+                      src="/src/components/ClockEdUI/Icons/Gamification_Icon.png" 
+                      alt="Gamification Icon" 
+                      className="w-48 h-48 object-contain"
+                    />
+                  </div>
                 </div>
                 
-                <div className="pt-8">
-                  <h3 className="text-2xl font-cinzel font-bold text-dark-bronze mb-4 flex items-center space-x-2">
+                <div>
+                  <h3 className="text-2xl font-cinzel font-bold text-dark-bronze mb-4 flex items-center justify-center space-x-2">
                     <span>Gamification</span>
                     <div className="w-2 h-2 bg-neon-cyan rounded-full animate-pulse"></div>
                   </h3>
@@ -182,7 +190,7 @@ const LandingPage: React.FC = () => {
             {/* Storybooks Card - Coming Soon */}
             <div className="group relative">
               <FrostedGlassPanel 
-                className="p-8 opacity-80 hover:opacity-100 transition-all duration-500" 
+                className="p-8 opacity-80 hover:opacity-100 transition-all duration-500 text-center" 
                 glowColor="aurora" 
                 borderStyle="standard"
               >
@@ -194,13 +202,19 @@ const LandingPage: React.FC = () => {
                   </span>
                 </div>
                 
-                {/* Floating Crystal Icon */}
-                <div className="absolute -top-6 left-8 w-16 h-16 bg-gradient-to-br from-brass to-aurora-glow rounded-2xl flex items-center justify-center shadow-aurora border-4 border-glass-white/30 opacity-75">
-                  <Users className="h-8 w-8 text-white" />
+                {/* Centered Large Icon */}
+                <div className="flex justify-center mb-6">
+                  <div className="flex items-center justify-center opacity-75">
+                    <img 
+                      src="/src/components/ClockEdUI/Icons/Storybook_Icon.png" 
+                      alt="Storybook Icon" 
+                      className="w-48 h-48 object-contain"
+                    />
+                  </div>
                 </div>
                 
-                <div className="pt-8">
-                  <h3 className="text-2xl font-cinzel font-bold text-dark-bronze/75 mb-4 flex items-center space-x-2">
+                <div>
+                  <h3 className="text-2xl font-cinzel font-bold text-dark-bronze/75 mb-4 flex items-center justify-center space-x-2">
                     <span>Storybooks</span>
                     <div className="w-2 h-2 bg-aurora-glow rounded-full animate-pulse"></div>
                   </h3>
@@ -271,7 +285,7 @@ const LandingPage: React.FC = () => {
               {/* Step 1 */}
               <div className="group relative">
                 <FrostedGlassPanel 
-                  className="p-8 transform hover:-translate-y-2 hover:scale-105 transition-all duration-500" 
+                  className="p-8 transform hover:-translate-y-2 hover:scale-105 transition-all duration-500 text-center" 
                   glowColor="cyan" 
                   borderStyle="crystal"
                   hasGearCorner
@@ -283,7 +297,18 @@ const LandingPage: React.FC = () => {
                     </div>
                   </div>
                   
-                  <div className="text-center pt-8">
+                  {/* Centered Large Icon */}
+                  <div className="flex justify-center mb-6 pt-8">
+                    <div className="flex items-center justify-center group-hover:animate-gear-pulse">
+                      <img 
+                        src="/src/components/ClockEdUI/Icons/Storybook_Icon.png" 
+                        alt="Sign Up Icon" 
+                        className="w-48 h-48 object-contain"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
                     <h3 className="text-xl font-cinzel font-bold text-dark-bronze mb-4 flex items-center justify-center space-x-2">
                       <span>🛠️ Sign Up</span>
                     </h3>
@@ -298,7 +323,7 @@ const LandingPage: React.FC = () => {
               {/* Step 2 */}
               <div className="group relative">
                 <FrostedGlassPanel 
-                  className="p-8 transform hover:-translate-y-2 hover:scale-105 transition-all duration-500" 
+                  className="p-8 transform hover:-translate-y-2 hover:scale-105 transition-all duration-500 text-center" 
                   glowColor="brass" 
                   borderStyle="embossed"
                   hasGearCorner
@@ -310,7 +335,18 @@ const LandingPage: React.FC = () => {
                     </div>
                   </div>
                   
-                  <div className="text-center pt-8">
+                  {/* Centered Large Icon */}
+                  <div className="flex justify-center mb-6 pt-8">
+                    <div className="flex items-center justify-center group-hover:animate-gear-pulse">
+                      <img 
+                        src="/src/components/ClockEdUI/Icons/Choose_Book_Icon.png" 
+                        alt="Choose Book Type Icon" 
+                        className="w-48 h-48 object-contain"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
                     <h3 className="text-xl font-cinzel font-bold text-dark-bronze mb-4 flex items-center justify-center space-x-2">
                       <span>📘 Choose Your Book Type</span>
                     </h3>
@@ -325,7 +361,7 @@ const LandingPage: React.FC = () => {
               {/* Step 3 */}
               <div className="group relative">
                 <FrostedGlassPanel 
-                  className="p-8 transform hover:-translate-y-2 hover:scale-105 transition-all duration-500" 
+                  className="p-8 transform hover:-translate-y-2 hover:scale-105 transition-all duration-500 text-center" 
                   glowColor="aurora" 
                   borderStyle="crystal"
                   hasGearCorner
@@ -337,7 +373,18 @@ const LandingPage: React.FC = () => {
                     </div>
                   </div>
                   
-                  <div className="text-center pt-8">
+                  {/* Centered Large Icon */}
+                  <div className="flex justify-center mb-6 pt-8">
+                    <div className="flex items-center justify-center group-hover:animate-gear-pulse">
+                      <img 
+                        src="/src/components/ClockEdUI/Icons/Export_icon.png" 
+                        alt="Export Icon" 
+                        className="w-48 h-48 object-contain"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
                     <h3 className="text-xl font-cinzel font-bold text-dark-bronze mb-4 flex items-center justify-center space-x-2">
                       <span>✨ Customize + Export</span>
                     </h3>
