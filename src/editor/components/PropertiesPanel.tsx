@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Settings, Type, Image as ImageIcon, QrCode, Upload } from 'lucide-react';
+import { Settings, Type, Image as ImageIcon, QrCode, Upload, BookOpen, FileText, Palette } from 'lucide-react';
 import { useEditorStore } from '../../store/editorStore';
 
 const PropertiesPanel: React.FC = () => {
@@ -12,11 +12,23 @@ const PropertiesPanel: React.FC = () => {
     updateProject 
   } = useEditorStore();
 
+  const [coverUrl, setCoverUrl] = useState(project?.cover_url || '');
+
   const activePage = project?.pages.find(p => p.id === activePageId);
   const selectedComponent = activePage?.components.find(c => c.id === selectedComponentId);
 
   const handleProjectUpdate = (field: string, value: string) => {
     updateProject({ [field]: value });
+  };
+
+  const handleProjectTypeToggle = () => {
+    const newType = project?.project_type === 'textbook' ? 'workbook' : 'textbook';
+    updateProject({ project_type: newType });
+  };
+
+  const handleCoverUrlChange = (url: string) => {
+    setCoverUrl(url);
+    updateProject({ cover_url: url });
   };
 
   const handleComponentUpdate = (field: string, value: any) => {
@@ -25,13 +37,30 @@ const PropertiesPanel: React.FC = () => {
     }
   };
 
+  const handleFileUpload = () => {
+    // Create a file input element
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        // In a real app, you would upload this to a storage service
+        // For now, we'll create a local URL
+        const url = URL.createObjectURL(file);
+        handleCoverUrlChange(url);
+      }
+    };
+    input.click();
+  };
+
   return (
     <div className="w-80 bg-cracked-porcelain/95 backdrop-blur-md border-l-2 border-brass/30 relative overflow-y-auto">
       {/* Background effects */}
       <div className="absolute inset-0 bg-cracked-porcelain opacity-50"></div>
       <div className="absolute top-0 left-0 w-px h-full bg-gradient-to-b from-neon-cyan/20 via-transparent to-neon-cyan/20"></div>
       
-      <div className="relative z-10 p-4">
+      <div className="relative z-10 p-4 space-y-6">
         {/* Header */}
         <div className="flex items-center space-x-2 mb-6">
           <Settings className="h-5 w-5 text-brass animate-spin-slow" />
@@ -40,7 +69,7 @@ const PropertiesPanel: React.FC = () => {
 
         {/* Project Properties */}
         <motion.div
-          className="mb-6 p-4 bg-porcelain rounded-xl border-2 border-brass/20 shadow-porcelain"
+          className="p-4 bg-porcelain rounded-xl border-2 border-brass/20 shadow-porcelain"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
@@ -51,6 +80,7 @@ const PropertiesPanel: React.FC = () => {
           </h4>
           
           <div className="space-y-4">
+            {/* Book Title */}
             <div>
               <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">
                 Book Title
@@ -63,7 +93,39 @@ const PropertiesPanel: React.FC = () => {
                 placeholder="Enter book title"
               />
             </div>
+
+            {/* Project Type Toggle */}
+            <div>
+              <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">
+                Book Type
+              </label>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={handleProjectTypeToggle}
+                  className={`flex-1 flex items-center justify-center space-x-2 px-3 py-2 rounded-lg border-2 transition-all duration-300 ${
+                    project?.project_type === 'textbook'
+                      ? 'bg-brass-gradient text-white border-brass shadow-brass'
+                      : 'bg-white text-dark-bronze border-brass/30 hover:border-brass/60'
+                  }`}
+                >
+                  <BookOpen className="h-4 w-4" />
+                  <span className="text-sm font-medium">Textbook</span>
+                </button>
+                <button
+                  onClick={handleProjectTypeToggle}
+                  className={`flex-1 flex items-center justify-center space-x-2 px-3 py-2 rounded-lg border-2 transition-all duration-300 ${
+                    project?.project_type === 'workbook'
+                      ? 'bg-brass-gradient text-white border-brass shadow-brass'
+                      : 'bg-white text-dark-bronze border-brass/30 hover:border-brass/60'
+                  }`}
+                >
+                  <FileText className="h-4 w-4" />
+                  <span className="text-sm font-medium">Workbook</span>
+                </button>
+              </div>
+            </div>
             
+            {/* Author */}
             <div>
               <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">
                 Author
@@ -77,6 +139,7 @@ const PropertiesPanel: React.FC = () => {
               />
             </div>
             
+            {/* Description */}
             <div>
               <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">
                 Description
@@ -89,6 +152,88 @@ const PropertiesPanel: React.FC = () => {
                 placeholder="Enter book description"
               />
             </div>
+          </div>
+        </motion.div>
+
+        {/* Cover Settings */}
+        <motion.div
+          className="p-4 bg-gradient-to-br from-brass/10 to-neon-cyan/5 rounded-xl border-2 border-brass/30 shadow-brass-glow"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          <h4 className="font-cinzel font-bold text-dark-bronze mb-4 flex items-center space-x-2">
+            <ImageIcon className="h-4 w-4 text-brass" />
+            <span>Cover Settings</span>
+          </h4>
+
+          <div className="space-y-4">
+            {/* Cover URL Input */}
+            <div>
+              <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">
+                Cover Image URL
+              </label>
+              <input
+                type="url"
+                value={coverUrl}
+                onChange={(e) => handleCoverUrlChange(e.target.value)}
+                className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white"
+                placeholder="Enter image URL"
+              />
+            </div>
+
+            {/* Upload Button */}
+            <button
+              onClick={handleFileUpload}
+              className="w-full flex items-center justify-center space-x-2 bg-brass-gradient text-white px-3 py-2 rounded-lg text-sm font-medium hover:shadow-brass-glow transition-all duration-300"
+            >
+              <Upload className="h-4 w-4" />
+              <span>Upload Cover Image</span>
+            </button>
+
+            {/* Cover Preview */}
+            {coverUrl && (
+              <div className="mt-3">
+                <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">
+                  Preview
+                </label>
+                <div className="w-full h-24 bg-gray-100 rounded-lg border border-brass/30 overflow-hidden">
+                  <img
+                    src={coverUrl}
+                    alt="Cover preview"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Template Settings */}
+        <motion.div
+          className="p-4 bg-gradient-to-br from-neon-cyan/10 to-brass/5 rounded-xl border-2 border-neon-cyan/30 shadow-cyan-glow"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+        >
+          <h4 className="font-cinzel font-bold text-dark-bronze mb-4 flex items-center space-x-2">
+            <Palette className="h-4 w-4 text-neon-cyan" />
+            <span>Cover Templates</span>
+          </h4>
+
+          <div className="text-center py-8">
+            <div className="w-16 h-16 bg-brass/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Palette className="h-8 w-8 text-brass/40" />
+            </div>
+            <p className="text-dark-bronze/60 font-inter text-sm">
+              No templates available
+            </p>
+            <p className="text-dark-bronze/40 font-inter text-xs mt-1">
+              Templates will be added in future updates
+            </p>
           </div>
         </motion.div>
 

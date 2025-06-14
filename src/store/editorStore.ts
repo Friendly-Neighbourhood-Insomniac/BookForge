@@ -23,8 +23,12 @@ export interface Page {
 export interface Project {
   id: string;
   title: string;
-  author: string;
-  description: string;
+  project_type: 'textbook' | 'workbook';
+  author?: string;
+  description?: string;
+  cover_type?: string;
+  template_type?: string;
+  cover_url?: string;
   pages: Page[];
 }
 

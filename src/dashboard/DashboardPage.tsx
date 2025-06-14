@@ -17,6 +17,7 @@ const DashboardPage: React.FC = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
   const navigate = useNavigate();
 
   // Get session and set up auth listener
@@ -63,6 +64,46 @@ const DashboardPage: React.FC = () => {
 
     fetchProjects();
   }, [session]);
+
+  const handleCreateNewProject = async () => {
+    if (!session?.user) {
+      console.error('No user session');
+      return;
+    }
+
+    setCreating(true);
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .insert([
+          {
+            title: 'Untitled Book',
+            project_type: 'textbook',
+            user_id: session.user.id,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+        ])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating project:', error);
+        alert('Failed to create project. Please try again.');
+        return;
+      }
+
+      if (data) {
+        // Navigate directly to editor
+        navigate(`/editor/${data.id}`);
+      }
+    } catch (error) {
+      console.error('Error creating project:', error);
+      alert('Failed to create project. Please try again.');
+    } finally {
+      setCreating(false);
+    }
+  };
 
   const deleteProject = async (id: string) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this project?');
@@ -138,14 +179,24 @@ const DashboardPage: React.FC = () => {
               </div>
               
               {/* New Book Button */}
-              <Link
-                to="/editor/create"
-                className="group bg-brass-gradient hover:shadow-cyan-glow text-white px-6 py-3 rounded-xl text-sm font-bold transition-all duration-300 shadow-brass transform hover:-translate-y-1 flex items-center space-x-2 border-2 border-brass-light/50 relative overflow-hidden"
+              <button
+                onClick={handleCreateNewProject}
+                disabled={creating}
+                className="group bg-brass-gradient hover:shadow-cyan-glow text-white px-6 py-3 rounded-xl text-sm font-bold transition-all duration-300 shadow-brass transform hover:-translate-y-1 flex items-center space-x-2 border-2 border-brass-light/50 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-neon-cyan/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <Plus className="h-4 w-4 relative z-10" />
-                <span className="relative z-10">New Book</span>
-              </Link>
+                {creating ? (
+                  <>
+                    <Cog className="h-4 w-4 relative z-10 animate-spin" />
+                    <span className="relative z-10">Creating...</span>
+                  </>
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4 relative z-10" />
+                    <span className="relative z-10">New Book</span>
+                  </>
+                )}
+              </button>
               
               {/* Logout Button */}
               <button
@@ -224,15 +275,25 @@ const DashboardPage: React.FC = () => {
                         </span>
                       </p>
                       
-                      <Link
-                        to="/editor/create"
-                        className="group inline-flex items-center space-x-3 bg-brass-gradient hover:shadow-cyan-glow text-white px-8 py-4 rounded-2xl text-lg font-bold transition-all duration-300 shadow-brass transform hover:-translate-y-1 border-2 border-brass-light/50 relative overflow-hidden"
+                      <button
+                        onClick={handleCreateNewProject}
+                        disabled={creating}
+                        className="group inline-flex items-center space-x-3 bg-brass-gradient hover:shadow-cyan-glow text-white px-8 py-4 rounded-2xl text-lg font-bold transition-all duration-300 shadow-brass transform hover:-translate-y-1 border-2 border-brass-light/50 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <div className="absolute inset-0 bg-gradient-to-r from-neon-cyan/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <Plus className="h-5 w-5 relative z-10" />
-                        <span className="relative z-10">Create Your First Book</span>
-                        <Sparkles className="h-5 w-5 relative z-10 group-hover:animate-pulse" />
-                      </Link>
+                        {creating ? (
+                          <>
+                            <Cog className="h-5 w-5 relative z-10 animate-spin" />
+                            <span className="relative z-10">Creating Your First Book...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Plus className="h-5 w-5 relative z-10" />
+                            <span className="relative z-10">Create Your First Book</span>
+                            <Sparkles className="h-5 w-5 relative z-10 group-hover:animate-pulse" />
+                          </>
+                        )}
+                      </button>
                     </div>
                   </div>
                 </div>

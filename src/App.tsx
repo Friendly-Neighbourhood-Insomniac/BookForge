@@ -5,7 +5,6 @@ import LoginPage from './auth/LoginPage';
 import RegisterPage from './auth/RegisterPage';
 import DashboardPage from './dashboard/DashboardPage';
 import EditorPage from './editor/EditorPage';
-import NewProjectFlow from './editor/NewProjectFlow';
 import PreviewPage from './preview/PreviewPage';
 import AdminPage from './admin/AdminPage';
 import AuthGuard from './components/AuthGuard';
@@ -24,11 +23,6 @@ function App() {
           <Route path="/dashboard" element={
             <AuthGuard>
               <DashboardPage />
-            </AuthGuard>
-          } />
-          <Route path="/editor/create" element={
-            <AuthGuard>
-              <NewProjectFlow />
             </AuthGuard>
           } />
           <Route path="/editor" element={
