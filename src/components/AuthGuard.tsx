@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { Session } from '@supabase/supabase-js';
+import { GlobalBackground, FrostedGlassPanel } from './ClockEdUI';
+import { Cog } from 'lucide-react';
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -56,10 +58,25 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+      <div className="min-h-screen bg-porcelain relative overflow-hidden">
+        <GlobalBackground />
+        <div className="relative z-10 flex items-center justify-center min-h-screen">
+          <FrostedGlassPanel className="p-8" glowColor="cyan" hasGearCorner>
+            <div className="text-center">
+              <div className="relative mb-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brass mx-auto"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Cog className="h-6 w-6 text-brass animate-reverse-spin" />
+                </div>
+              </div>
+              <p className="text-dark-bronze font-inter">Loading...</p>
+              <div className="mt-4 flex justify-center space-x-1">
+                <div className="w-2 h-2 bg-neon-cyan rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-brass rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+                <div className="w-2 h-2 bg-neon-cyan rounded-full animate-pulse" style={{ animationDelay: '0.6s' }}></div>
+              </div>
+            </div>
+          </FrostedGlassPanel>
         </div>
       </div>
     );

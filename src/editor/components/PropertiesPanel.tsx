@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Settings, Type, Image as ImageIcon, QrCode, Upload, BookOpen, FileText, Palette, X } from 'lucide-react';
+import { Settings, Type, Image as ImageIcon, QrCode, Upload, BookOpen, FileText, Palette, X, Cog } from 'lucide-react';
 import { useEditorStore } from '../../store/editorStore';
+import { FrostedGlassPanel, CrystalButton, IcyInput } from '../../components/ClockEdUI';
 
 interface PropertiesPanelProps {
   isOpen?: boolean;
@@ -76,337 +77,309 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ isOpen = true, onClos
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2">
-          <Settings className="h-5 w-5 text-brass animate-spin-slow" />
+          <div className="relative">
+            <Settings className="h-5 w-5 text-brass animate-spin-slow" />
+            <div className="absolute inset-0 h-5 w-5 bg-brass/20 rounded-full blur-sm"></div>
+          </div>
           <h3 className="text-lg font-cinzel font-bold text-dark-bronze">Properties</h3>
         </div>
         {/* Close button for mobile */}
-        <button
-          onClick={onClose}
-          className="p-2 text-dark-bronze hover:text-brass transition-colors rounded-lg hover:bg-brass/10 lg:hidden"
-        >
-          <X className="h-5 w-5" />
-        </button>
+        {onClose && (
+          <CrystalButton
+            onClick={onClose}
+            variant="ghost"
+            size="sm"
+            icon={X}
+            className="lg:hidden"
+          />
+        )}
       </div>
 
       {/* Project Properties */}
       <motion.div
-        className="p-4 bg-porcelain rounded-xl border-2 border-brass/20 shadow-porcelain"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <h4 className="font-cinzel font-bold text-dark-bronze mb-4 flex items-center space-x-2">
-          <div className="w-2 h-2 bg-brass rounded-full"></div>
-          <span>Book Properties</span>
-        </h4>
-        
-        <div className="space-y-4">
-          {/* Book Title */}
-          <div>
-            <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">
-              Book Title
-            </label>
-            <input
-              type="text"
+        <FrostedGlassPanel glowColor="brass" borderStyle="embossed" hasGearCorner>
+          <h4 className="font-cinzel font-bold text-dark-bronze mb-4 flex items-center space-x-2">
+            <div className="w-2 h-2 bg-brass rounded-full animate-pulse"></div>
+            <span>Book Properties</span>
+          </h4>
+          
+          <div className="space-y-4">
+            {/* Book Title */}
+            <IcyInput
               value={project?.title || ''}
-              onChange={(e) => handleProjectUpdate('title', e.target.value)}
-              className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white"
+              onChange={(value) => handleProjectUpdate('title', value)}
               placeholder="Enter book title"
+              label="Book Title"
             />
-          </div>
 
-          {/* Project Type Toggle */}
-          <div>
-            <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">
-              Book Type
-            </label>
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={handleProjectTypeToggle}
-                className={`flex-1 flex items-center justify-center space-x-2 px-3 py-2 rounded-lg border-2 transition-all duration-300 ${
-                  project?.project_type === 'textbook'
-                    ? 'bg-brass-gradient text-white border-brass shadow-brass'
-                    : 'bg-white text-dark-bronze border-brass/30 hover:border-brass/60'
-                }`}
-              >
-                <BookOpen className="h-4 w-4" />
-                <span className="text-sm font-medium">Textbook</span>
-              </button>
-              <button
-                onClick={handleProjectTypeToggle}
-                className={`flex-1 flex items-center justify-center space-x-2 px-3 py-2 rounded-lg border-2 transition-all duration-300 ${
-                  project?.project_type === 'workbook'
-                    ? 'bg-brass-gradient text-white border-brass shadow-brass'
-                    : 'bg-white text-dark-bronze border-brass/30 hover:border-brass/60'
-                }`}
-              >
-                <FileText className="h-4 w-4" />
-                <span className="text-sm font-medium">Workbook</span>
-              </button>
+            {/* Project Type Toggle */}
+            <div>
+              <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">
+                Book Type
+              </label>
+              <div className="flex items-center space-x-2">
+                <CrystalButton
+                  onClick={handleProjectTypeToggle}
+                  variant={project?.project_type === 'textbook' ? 'primary' : 'ghost'}
+                  size="sm"
+                  icon={BookOpen}
+                  className="flex-1"
+                >
+                  Textbook
+                </CrystalButton>
+                <CrystalButton
+                  onClick={handleProjectTypeToggle}
+                  variant={project?.project_type === 'workbook' ? 'primary' : 'ghost'}
+                  size="sm"
+                  icon={FileText}
+                  className="flex-1"
+                >
+                  Workbook
+                </CrystalButton>
+              </div>
             </div>
-          </div>
-          
-          {/* Author */}
-          <div>
-            <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">
-              Author
-            </label>
-            <input
-              type="text"
+            
+            {/* Author */}
+            <IcyInput
               value={project?.author || ''}
-              onChange={(e) => handleProjectUpdate('author', e.target.value)}
-              className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white"
+              onChange={(value) => handleProjectUpdate('author', value)}
               placeholder="Enter author name"
+              label="Author"
             />
-          </div>
-          
-          {/* Description */}
-          <div>
-            <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">
-              Description
-            </label>
-            <textarea
-              rows={3}
+            
+            {/* Description */}
+            <IcyInput
+              type="textarea"
               value={project?.description || ''}
-              onChange={(e) => handleProjectUpdate('description', e.target.value)}
-              className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white resize-none"
+              onChange={(value) => handleProjectUpdate('description', value)}
               placeholder="Enter book description"
+              label="Description"
+              rows={3}
             />
           </div>
-        </div>
+        </FrostedGlassPanel>
       </motion.div>
 
       {/* Cover Settings */}
       <motion.div
-        className="p-4 bg-gradient-to-br from-brass/10 to-neon-cyan/5 rounded-xl border-2 border-brass/30 shadow-brass-glow"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}
       >
-        <h4 className="font-cinzel font-bold text-dark-bronze mb-4 flex items-center space-x-2">
-          <ImageIcon className="h-4 w-4 text-brass" />
-          <span>Cover Settings</span>
-        </h4>
+        <FrostedGlassPanel glowColor="cyan" borderStyle="crystal">
+          <h4 className="font-cinzel font-bold text-dark-bronze mb-4 flex items-center space-x-2">
+            <ImageIcon className="h-4 w-4 text-neon-cyan" />
+            <span>Cover Settings</span>
+          </h4>
 
-        <div className="space-y-4">
-          {/* Cover URL Input */}
-          <div>
-            <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">
-              Cover Image URL
-            </label>
-            <input
+          <div className="space-y-4">
+            {/* Cover URL Input */}
+            <IcyInput
               type="url"
               value={coverUrl}
-              onChange={(e) => handleCoverUrlChange(e.target.value)}
-              className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white"
+              onChange={handleCoverUrlChange}
               placeholder="Enter image URL"
+              label="Cover Image URL"
             />
-          </div>
 
-          {/* Upload Button */}
-          <button
-            onClick={handleFileUpload}
-            className="w-full flex items-center justify-center space-x-2 bg-brass-gradient text-white px-3 py-2 rounded-lg text-sm font-medium hover:shadow-brass-glow transition-all duration-300"
-          >
-            <Upload className="h-4 w-4" />
-            <span>Upload Cover Image</span>
-          </button>
+            {/* Upload Button */}
+            <CrystalButton
+              onClick={handleFileUpload}
+              variant="secondary"
+              size="md"
+              icon={Upload}
+              className="w-full"
+            >
+              Upload Cover Image
+            </CrystalButton>
 
-          {/* Cover Preview */}
-          {coverUrl && (
-            <div className="mt-3">
-              <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">
-                Preview
-              </label>
-              <div className="w-full h-24 bg-gray-100 rounded-lg border border-brass/30 overflow-hidden">
-                <img
-                  src={coverUrl}
-                  alt="Cover preview"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
+            {/* Cover Preview */}
+            {coverUrl && (
+              <div className="mt-3">
+                <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">
+                  Preview
+                </label>
+                <FrostedGlassPanel className="p-0 overflow-hidden" borderStyle="crystal">
+                  <div className="w-full h-24 bg-porcelain-gradient overflow-hidden">
+                    <img
+                      src={coverUrl}
+                      alt="Cover preview"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  </div>
+                </FrostedGlassPanel>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </FrostedGlassPanel>
       </motion.div>
 
       {/* Template Settings */}
       <motion.div
-        className="p-4 bg-gradient-to-br from-neon-cyan/10 to-brass/5 rounded-xl border-2 border-neon-cyan/30 shadow-cyan-glow"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.2 }}
       >
-        <h4 className="font-cinzel font-bold text-dark-bronze mb-4 flex items-center space-x-2">
-          <Palette className="h-4 w-4 text-neon-cyan" />
-          <span>Cover Templates</span>
-        </h4>
+        <FrostedGlassPanel glowColor="aurora" borderStyle="standard">
+          <h4 className="font-cinzel font-bold text-dark-bronze mb-4 flex items-center space-x-2">
+            <Palette className="h-4 w-4 text-aurora-glow" />
+            <span>Cover Templates</span>
+          </h4>
 
-        <div className="text-center py-8">
-          <div className="w-16 h-16 bg-brass/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Palette className="h-8 w-8 text-brass/40" />
+          <div className="text-center py-8">
+            <div className="w-16 h-16 bg-brass/20 rounded-full flex items-center justify-center mx-auto mb-4 relative">
+              <Palette className="h-8 w-8 text-brass/60" />
+              <div className="absolute inset-0 rounded-full border-2 border-dashed border-brass/30"></div>
+            </div>
+            <p className="text-dark-bronze/60 font-inter text-sm">
+              No templates available
+            </p>
+            <p className="text-dark-bronze/40 font-inter text-xs mt-1">
+              Templates will be added in future updates
+            </p>
           </div>
-          <p className="text-dark-bronze/60 font-inter text-sm">
-            No templates available
-          </p>
-          <p className="text-dark-bronze/40 font-inter text-xs mt-1">
-            Templates will be added in future updates
-          </p>
-        </div>
+        </FrostedGlassPanel>
       </motion.div>
 
       {/* Component Properties */}
       {selectedComponent ? (
         <motion.div
-          className="p-4 bg-gradient-to-br from-brass/10 to-neon-cyan/5 rounded-xl border-2 border-brass/30 shadow-brass-glow"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <h4 className="font-cinzel font-bold text-dark-bronze mb-4 flex items-center space-x-2">
-            {selectedComponent.type === 'text' && <Type className="h-4 w-4 text-brass" />}
-            {selectedComponent.type === 'image' && <ImageIcon className="h-4 w-4 text-brass" />}
-            {selectedComponent.type === 'qr' && <QrCode className="h-4 w-4 text-brass" />}
-            <span className="capitalize">{selectedComponent.type} Properties</span>
-          </h4>
+          <FrostedGlassPanel glowColor="brass" borderStyle="embossed" hasGearCorner>
+            <h4 className="font-cinzel font-bold text-dark-bronze mb-4 flex items-center space-x-2">
+              {selectedComponent.type === 'text' && <Type className="h-4 w-4 text-brass" />}
+              {selectedComponent.type === 'image' && <ImageIcon className="h-4 w-4 text-brass" />}
+              {selectedComponent.type === 'qr' && <QrCode className="h-4 w-4 text-brass" />}
+              <span className="capitalize">{selectedComponent.type} Properties</span>
+            </h4>
 
-          <div className="space-y-4">
-            {/* Position */}
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block text-xs font-medium text-dark-bronze/70 mb-1 font-inter">X</label>
-                <input
+            <div className="space-y-4">
+              {/* Position */}
+              <div className="grid grid-cols-2 gap-3">
+                <IcyInput
                   type="number"
-                  value={Math.round(selectedComponent.position.x)}
-                  onChange={(e) => handleComponentUpdate('position.x', parseInt(e.target.value) || 0)}
-                  className="w-full px-2 py-1 border border-brass/30 rounded text-sm focus:ring-1 focus:ring-brass bg-white"
+                  value={Math.round(selectedComponent.position.x).toString()}
+                  onChange={(value) => handleComponentUpdate('position.x', parseInt(value) || 0)}
+                  label="X Position"
+                />
+                <IcyInput
+                  type="number"
+                  value={Math.round(selectedComponent.position.y).toString()}
+                  onChange={(value) => handleComponentUpdate('position.y', parseInt(value) || 0)}
+                  label="Y Position"
                 />
               </div>
-              <div>
-                <label className="block text-xs font-medium text-dark-bronze/70 mb-1 font-inter">Y</label>
-                <input
-                  type="number"
-                  value={Math.round(selectedComponent.position.y)}
-                  onChange={(e) => handleComponentUpdate('position.y', parseInt(e.target.value) || 0)}
-                  className="w-full px-2 py-1 border border-brass/30 rounded text-sm focus:ring-1 focus:ring-brass bg-white"
-                />
-              </div>
-            </div>
 
-            {/* Size */}
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block text-xs font-medium text-dark-bronze/70 mb-1 font-inter">Width</label>
-                <input
+              {/* Size */}
+              <div className="grid grid-cols-2 gap-3">
+                <IcyInput
                   type="number"
-                  value={selectedComponent.size.width}
-                  onChange={(e) => handleComponentUpdate('size.width', parseInt(e.target.value) || 100)}
-                  className="w-full px-2 py-1 border border-brass/30 rounded text-sm focus:ring-1 focus:ring-brass bg-white"
+                  value={selectedComponent.size.width.toString()}
+                  onChange={(value) => handleComponentUpdate('size.width', parseInt(value) || 100)}
+                  label="Width"
+                />
+                <IcyInput
+                  type="number"
+                  value={selectedComponent.size.height.toString()}
+                  onChange={(value) => handleComponentUpdate('size.height', parseInt(value) || 100)}
+                  label="Height"
                 />
               </div>
-              <div>
-                <label className="block text-xs font-medium text-dark-bronze/70 mb-1 font-inter">Height</label>
-                <input
-                  type="number"
-                  value={selectedComponent.size.height}
-                  onChange={(e) => handleComponentUpdate('size.height', parseInt(e.target.value) || 100)}
-                  className="w-full px-2 py-1 border border-brass/30 rounded text-sm focus:ring-1 focus:ring-brass bg-white"
-                />
-              </div>
-            </div>
 
-            {/* Z-Index */}
-            <div>
-              <label className="block text-xs font-medium text-dark-bronze/70 mb-1 font-inter">Layer</label>
-              <input
+              {/* Z-Index */}
+              <IcyInput
                 type="number"
-                value={selectedComponent.zIndex}
-                onChange={(e) => handleComponentUpdate('zIndex', parseInt(e.target.value) || 1)}
-                className="w-full px-2 py-1 border border-brass/30 rounded text-sm focus:ring-1 focus:ring-brass bg-white"
-                min="1"
+                value={selectedComponent.zIndex.toString()}
+                onChange={(value) => handleComponentUpdate('zIndex', parseInt(value) || 1)}
+                label="Layer (Z-Index)"
               />
-            </div>
 
-            {/* Type-specific properties */}
-            {selectedComponent.type === 'text' && (
-              <>
-                <div>
-                  <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">Content</label>
-                  <textarea
-                    rows={3}
+              {/* Type-specific properties */}
+              {selectedComponent.type === 'text' && (
+                <div className="space-y-4">
+                  <IcyInput
+                    type="textarea"
                     value={selectedComponent.props.content || ''}
-                    onChange={(e) => handleComponentUpdate('props.content', e.target.value)}
-                    className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white resize-none"
+                    onChange={(value) => handleComponentUpdate('props.content', value)}
                     placeholder="Enter text content"
+                    label="Text Content"
+                    rows={3}
                   />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">Font Size</label>
-                  <input
+                  <IcyInput
                     type="number"
-                    value={selectedComponent.props.fontSize || 16}
-                    onChange={(e) => handleComponentUpdate('props.fontSize', parseInt(e.target.value) || 16)}
-                    className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white"
-                    min="8"
-                    max="72"
+                    value={(selectedComponent.props.fontSize || 16).toString()}
+                    onChange={(value) => handleComponentUpdate('props.fontSize', parseInt(value) || 16)}
+                    label="Font Size (px)"
                   />
                 </div>
-              </>
-            )}
+              )}
 
-            {selectedComponent.type === 'image' && (
-              <div>
-                <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">Image URL</label>
-                <input
-                  type="url"
-                  value={selectedComponent.props.imageUrl || ''}
-                  onChange={(e) => handleComponentUpdate('props.imageUrl', e.target.value)}
-                  className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white"
-                  placeholder="Enter image URL"
-                />
-                <button className="mt-2 w-full flex items-center justify-center space-x-2 bg-brass-gradient text-white px-3 py-2 rounded-lg text-sm font-medium hover:shadow-brass-glow transition-all duration-300">
-                  <Upload className="h-4 w-4" />
-                  <span>Upload Image</span>
-                </button>
-              </div>
-            )}
+              {selectedComponent.type === 'image' && (
+                <div className="space-y-4">
+                  <IcyInput
+                    type="url"
+                    value={selectedComponent.props.imageUrl || ''}
+                    onChange={(value) => handleComponentUpdate('props.imageUrl', value)}
+                    placeholder="Enter image URL"
+                    label="Image URL"
+                  />
+                  <CrystalButton
+                    variant="secondary"
+                    size="md"
+                    icon={Upload}
+                    className="w-full"
+                  >
+                    Upload Image
+                  </CrystalButton>
+                </div>
+              )}
 
-            {selectedComponent.type === 'qr' && (
-              <>
-                <div>
-                  <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">Label</label>
-                  <input
-                    type="text"
+              {selectedComponent.type === 'qr' && (
+                <div className="space-y-4">
+                  <IcyInput
                     value={selectedComponent.props.qrLabel || ''}
-                    onChange={(e) => handleComponentUpdate('props.qrLabel', e.target.value)}
-                    className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white"
+                    onChange={(value) => handleComponentUpdate('props.qrLabel', value)}
                     placeholder="QR Code label"
+                    label="Label"
                   />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">Target URL</label>
-                  <input
+                  <IcyInput
                     type="url"
                     value={selectedComponent.props.qrTarget || ''}
-                    onChange={(e) => handleComponentUpdate('props.qrTarget', e.target.value)}
-                    className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white"
+                    onChange={(value) => handleComponentUpdate('props.qrTarget', value)}
                     placeholder="https://example.com"
+                    label="Target URL"
                   />
                 </div>
-              </>
-            )}
-          </div>
+              )}
+            </div>
+          </FrostedGlassPanel>
         </motion.div>
       ) : (
-        <div className="p-8 text-center text-dark-bronze/60">
-          <div className="w-16 h-16 bg-brass/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Settings className="h-8 w-8 text-brass/40" />
-          </div>
-          <p className="font-inter">Select a component to edit its properties</p>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <FrostedGlassPanel className="p-8 text-center" glowColor="aurora" hasGearCorner>
+            <div className="w-16 h-16 bg-brass/20 rounded-full flex items-center justify-center mx-auto mb-4 relative">
+              <Settings className="h-8 w-8 text-brass/60" />
+              <div className="absolute inset-0 rounded-full">
+                <Cog className="h-4 w-4 text-brass/40 absolute top-0 right-0 animate-spin-slow" />
+              </div>
+            </div>
+            <p className="font-inter text-dark-bronze/60">Select a component to edit its properties</p>
+          </FrostedGlassPanel>
+        </motion.div>
       )}
     </div>
   );
@@ -414,23 +387,19 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ isOpen = true, onClos
   return (
     <>
       {/* Desktop panel */}
-      <div className="hidden lg:block w-80 bg-cracked-porcelain/95 backdrop-blur-md border-l-2 border-brass/30 relative overflow-y-auto">
-        {/* Background effects */}
-        <div className="absolute inset-0 bg-cracked-porcelain opacity-50"></div>
-        <div className="absolute top-0 left-0 w-px h-full bg-gradient-to-b from-neon-cyan/20 via-transparent to-neon-cyan/20"></div>
-        
-        <PanelContent />
+      <div className="hidden lg:block w-80 relative border-l border-glass-white/20">
+        <FrostedGlassPanel className="h-full rounded-none border-0 border-l border-neon-cyan/20" borderStyle="standard">
+          <PanelContent />
+        </FrostedGlassPanel>
       </div>
 
       {/* Mobile drawer */}
-      <div className={`lg:hidden fixed inset-y-0 right-0 z-40 w-80 bg-cracked-porcelain/95 backdrop-blur-md border-l-2 border-brass/30 transform transition-transform duration-300 ease-in-out ${
+      <div className={`lg:hidden fixed inset-y-0 right-0 z-40 w-80 transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
-        {/* Background effects */}
-        <div className="absolute inset-0 bg-cracked-porcelain opacity-50"></div>
-        <div className="absolute top-0 left-0 w-px h-full bg-gradient-to-b from-neon-cyan/20 via-transparent to-neon-cyan/20"></div>
-        
-        <PanelContent />
+        <FrostedGlassPanel className="h-full rounded-none border-0 border-l border-neon-cyan/20" borderStyle="standard">
+          <PanelContent />
+        </FrostedGlassPanel>
       </div>
     </>
   );
