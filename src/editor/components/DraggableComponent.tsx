@@ -7,22 +7,71 @@ interface DraggableComponentProps {
   component: Component;
   isSelected: boolean;
   onSelect: () => void;
+  gridSize?: number;
+  marginSize?: number;
+  canvasWidth: number;
+  canvasHeight: number;
 }
 
 const DraggableComponent: React.FC<DraggableComponentProps> = ({
   component,
   isSelected,
-  onSelect
+  onSelect,
+  gridSize = 0,
+  marginSize = 0,
+  canvasWidth,
+  canvasHeight
 }) => {
   const { updateComponent, deleteComponent, duplicateComponent } = useEditorStore();
   const [isDragging, setIsDragging] = useState(false);
 
+  const snapToGrid = (value: number, gridSize: number) => {
+    if (gridSize === 0) return value;
+    return Math.round(value / gridSize) * gridSize;
+  };
+
+  const snapToMargin = (value: number, marginSize: number, threshold: number = 10) => {
+    if (marginSize === 0) return value;
+    
+    // Snap to margin boundaries if within threshold
+    if (Math.abs(value - marginSize) < threshold) {
+      return marginSize;
+    }
+    if (Math.abs(value - (canvasWidth - marginSize)) < threshold) {
+      return canvasWidth - marginSize;
+    }
+    if (Math.abs(value - (canvasHeight - marginSize)) < threshold) {
+      return canvasHeight - marginSize;
+    }
+    
+    return value;
+  };
+
   const handleDragEnd = (event: any, info: any) => {
     setIsDragging(false);
+    
+    let newX = Math.max(0, component.position.x + info.offset.x);
+    let newY = Math.max(0, component.position.y + info.offset.y);
+    
+    // Ensure component stays within canvas bounds
+    newX = Math.min(newX, canvasWidth - component.size.width);
+    newY = Math.min(newY, canvasHeight - component.size.height);
+    
+    // Apply snapping
+    if (gridSize > 0) {
+      newX = snapToGrid(newX, gridSize);
+      newY = snapToGrid(newY, gridSize);
+    }
+    
+    if (marginSize > 0) {
+      newX = snapToMargin(newX, marginSize);
+      newY = snapToMargin(newY, marginSize);
+    }
+    
     updateComponent(component.id, {
       position: {
-        x: Math.max(0, component.position.x + info.offset.x),
-        y: Math.max(0, component.position.y + info.offset.y)
+        x: newX,
+        y: newY
       }
     });
   };
