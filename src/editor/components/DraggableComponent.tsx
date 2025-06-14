@@ -11,6 +11,7 @@ interface DraggableComponentProps {
   marginSize?: number;
   canvasWidth: number;
   canvasHeight: number;
+  scale?: number;
 }
 
 const DraggableComponent: React.FC<DraggableComponentProps> = ({
@@ -20,7 +21,8 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({
   gridSize = 0,
   marginSize = 0,
   canvasWidth,
-  canvasHeight
+  canvasHeight,
+  scale = 1
 }) => {
   const { updateComponent, deleteComponent, duplicateComponent } = useEditorStore();
   const [isDragging, setIsDragging] = useState(false);
@@ -82,7 +84,7 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({
         return (
           <div
             className="w-full h-full p-2 bg-transparent border-2 border-transparent rounded cursor-text"
-            style={{ fontSize: component.props.fontSize || 16 }}
+            style={{ fontSize: (component.props.fontSize || 16) * scale }}
           >
             <div className="text-dark-bronze font-inter">
               {component.props.content || 'New text'}

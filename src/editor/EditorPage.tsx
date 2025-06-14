@@ -23,6 +23,8 @@ const EditorPage: React.FC = () => {
     redoStack
   } = useEditorStore();
   const [error, setError] = useState<string | null>(null);
+  const [isPageSidebarOpen, setIsPageSidebarOpen] = useState(false);
+  const [isPropertiesPanelOpen, setIsPropertiesPanelOpen] = useState(false);
 
   // Block navigation if there are unsaved changes
   const blocker = useBlocker(
@@ -203,17 +205,37 @@ const EditorPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-dark-bronze flex flex-col">
-      <EditorHeader />
+      <EditorHeader 
+        onTogglePageSidebar={() => setIsPageSidebarOpen(!isPageSidebarOpen)}
+        onTogglePropertiesPanel={() => setIsPropertiesPanelOpen(!isPropertiesPanelOpen)}
+      />
       
-      <div className="flex flex-1 overflow-hidden">
-        <PageSidebar />
+      <div className="flex flex-1 overflow-hidden relative">
+        {/* Mobile backdrop */}
+        {(isPageSidebarOpen || isPropertiesPanelOpen) && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+            onClick={() => {
+              setIsPageSidebarOpen(false);
+              setIsPropertiesPanelOpen(false);
+            }}
+          />
+        )}
+
+        <PageSidebar 
+          isOpen={isPageSidebarOpen}
+          onClose={() => setIsPageSidebarOpen(false)}
+        />
         
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           <EditorCanvas />
           <ComponentToolbar />
         </div>
         
-        <PropertiesPanel />
+        <PropertiesPanel 
+          isOpen={isPropertiesPanelOpen}
+          onClose={() => setIsPropertiesPanelOpen(false)}
+        />
       </div>
     </div>
   );

@@ -13,12 +13,22 @@ import {
   AlertCircle,
   Undo,
   Redo,
-  Play
+  Play,
+  Menu,
+  Sliders
 } from 'lucide-react';
 import { useEditorStore } from '../../store/editorStore';
 import FlipbookPreviewModal from './FlipbookPreviewModal';
 
-const EditorHeader: React.FC = () => {
+interface EditorHeaderProps {
+  onTogglePageSidebar?: () => void;
+  onTogglePropertiesPanel?: () => void;
+}
+
+const EditorHeader: React.FC<EditorHeaderProps> = ({
+  onTogglePageSidebar,
+  onTogglePropertiesPanel
+}) => {
   const { 
     project, 
     unsavedChanges, 
@@ -42,28 +52,28 @@ const EditorHeader: React.FC = () => {
         return (
           <>
             <Clock className="h-4 w-4 animate-spin" />
-            <span>Saving...</span>
+            <span className="hidden sm:inline">Saving...</span>
           </>
         );
       case 'saved':
         return (
           <>
             <CheckCircle className="h-4 w-4" />
-            <span>Saved</span>
+            <span className="hidden sm:inline">Saved</span>
           </>
         );
       case 'error':
         return (
           <>
             <AlertCircle className="h-4 w-4" />
-            <span>Error</span>
+            <span className="hidden sm:inline">Error</span>
           </>
         );
       default:
         return (
           <>
             <Save className="h-4 w-4" />
-            <span>Save</span>
+            <span className="hidden sm:inline">Save</span>
           </>
         );
     }
@@ -90,24 +100,44 @@ const EditorHeader: React.FC = () => {
         <div className="relative z-10 max-w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Left Section */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              {/* Mobile sidebar toggles */}
+              <div className="flex items-center space-x-1 lg:hidden">
+                <button
+                  onClick={onTogglePageSidebar}
+                  className="p-2 text-dark-bronze hover:text-brass transition-colors rounded-lg hover:bg-brass/10"
+                  title="Toggle Pages"
+                >
+                  <Menu className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={onTogglePropertiesPanel}
+                  className="p-2 text-dark-bronze hover:text-brass transition-colors rounded-lg hover:bg-brass/10"
+                  title="Toggle Properties"
+                >
+                  <Sliders className="h-5 w-5" />
+                </button>
+              </div>
+
               <Link 
                 to="/dashboard" 
                 className="flex items-center space-x-2 text-dark-bronze hover:text-brass transition-colors group"
               >
                 <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
-                <span className="font-inter font-medium">Dashboard</span>
+                <span className="font-inter font-medium hidden sm:inline">Dashboard</span>
               </Link>
               
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className="relative">
-                  <Cog className="h-6 w-6 text-brass animate-spin-slow" />
-                  <div className="absolute inset-0 h-6 w-6 bg-brass/20 rounded-full blur-sm"></div>
+                  <Cog className="h-5 w-5 sm:h-6 sm:w-6 text-brass animate-spin-slow" />
+                  <div className="absolute inset-0 h-5 w-5 sm:h-6 sm:w-6 bg-brass/20 rounded-full blur-sm"></div>
                 </div>
-                <div className="text-dark-bronze">
-                  <span className="text-lg font-cinzel font-bold">{project?.title || 'Untitled Book'}</span>
+                <div className="text-dark-bronze min-w-0">
+                  <span className="text-sm sm:text-lg font-cinzel font-bold truncate block max-w-[120px] sm:max-w-none">
+                    {project?.title || 'Untitled Book'}
+                  </span>
                   {unsavedChanges && (
-                    <span className="ml-2 text-xs bg-neon-cyan/20 text-neon-cyan px-2 py-1 rounded-full">
+                    <span className="text-xs bg-neon-cyan/20 text-neon-cyan px-2 py-1 rounded-full hidden sm:inline">
                       Unsaved changes
                     </span>
                   )}
@@ -115,8 +145,8 @@ const EditorHeader: React.FC = () => {
               </div>
             </div>
 
-            {/* Center Section - Undo/Redo */}
-            <div className="flex items-center space-x-2">
+            {/* Center Section - Undo/Redo (hidden on mobile) */}
+            <div className="hidden md:flex items-center space-x-2">
               <motion.button
                 onClick={undo}
                 disabled={undoStack.length === 0}
@@ -149,9 +179,9 @@ const EditorHeader: React.FC = () => {
             </div>
 
             {/* Right Section */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-1 sm:space-x-3">
               <button 
-                className="p-2 text-dark-bronze hover:text-brass transition-colors rounded-lg hover:bg-brass/10"
+                className="p-2 text-dark-bronze hover:text-brass transition-colors rounded-lg hover:bg-brass/10 hidden sm:block"
                 title="Settings"
               >
                 <Settings className="h-5 w-5" />
@@ -159,24 +189,24 @@ const EditorHeader: React.FC = () => {
               
               <button
                 onClick={() => setShowPreviewModal(true)}
-                className="flex items-center space-x-2 bg-gradient-to-r from-neon-cyan to-brass hover:shadow-cyan-glow text-white px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 shadow-brass border border-neon-cyan/30"
+                className="flex items-center space-x-1 sm:space-x-2 bg-gradient-to-r from-neon-cyan to-brass hover:shadow-cyan-glow text-white px-2 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 shadow-brass border border-neon-cyan/30"
               >
                 <Play className="h-4 w-4" />
-                <span>Flipbook Preview</span>
+                <span className="hidden sm:inline">Flipbook Preview</span>
               </button>
               
               <Link
                 to={`/preview/${project?.id}`}
-                className="flex items-center space-x-2 bg-porcelain-gradient hover:bg-brass/10 text-dark-bronze px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 shadow-porcelain border border-brass/20 hover:shadow-brass-glow"
+                className="flex items-center space-x-1 sm:space-x-2 bg-porcelain-gradient hover:bg-brass/10 text-dark-bronze px-2 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 shadow-porcelain border border-brass/20 hover:shadow-brass-glow"
               >
                 <Eye className="h-4 w-4" />
-                <span>Preview</span>
+                <span className="hidden sm:inline">Preview</span>
               </Link>
               
               <motion.button
                 onClick={handleSave}
                 disabled={saveStatus === 'saving'}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 shadow-brass border-2 border-brass-light/50 ${getSaveButtonStyle()}`}
+                className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 shadow-brass border-2 border-brass-light/50 ${getSaveButtonStyle()}`}
                 whileHover={{ scale: saveStatus === 'saving' ? 1 : 1.05 }}
                 whileTap={{ scale: saveStatus === 'saving' ? 1 : 0.95 }}
               >

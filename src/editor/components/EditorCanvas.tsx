@@ -15,11 +15,21 @@ const EditorCanvas: React.FC = () => {
 
   const activePage = project?.pages.find(p => p.id === activePageId);
 
-  // Canvas dimensions (A4 ratio)
-  const CANVAS_WIDTH = 595;
-  const CANVAS_HEIGHT = 842;
-  const MARGIN_SIZE = 30; // Safe print area margin
-  const GRID_SIZE = 20; // Grid cell size
+  // Canvas dimensions (A4 ratio) - responsive
+  const getCanvasDimensions = () => {
+    const baseWidth = 595;
+    const baseHeight = 842;
+    const scale = Math.min(1, window.innerWidth < 768 ? 0.7 : 1);
+    return {
+      width: baseWidth * scale,
+      height: baseHeight * scale,
+      scale
+    };
+  };
+
+  const { width: CANVAS_WIDTH, height: CANVAS_HEIGHT, scale } = getCanvasDimensions();
+  const MARGIN_SIZE = 30 * scale; // Safe print area margin
+  const GRID_SIZE = 20 * scale; // Grid cell size
 
   const handleCanvasClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -120,8 +130,8 @@ const EditorCanvas: React.FC = () => {
     const horizontalMarks = [];
     const verticalMarks = [];
 
-    // Horizontal ruler marks (every 50px)
-    for (let x = 0; x <= CANVAS_WIDTH; x += 50) {
+    // Horizontal ruler marks (every 50px scaled)
+    for (let x = 0; x <= CANVAS_WIDTH; x += 50 * scale) {
       horizontalMarks.push(
         <g key={`h-mark-${x}`}>
           <line
@@ -139,14 +149,14 @@ const EditorCanvas: React.FC = () => {
             fontSize="8"
             fontFamily="Inter"
           >
-            {x}
+            {Math.round(x / scale)}
           </text>
         </g>
       );
     }
 
-    // Vertical ruler marks (every 50px)
-    for (let y = 0; y <= CANVAS_HEIGHT; y += 50) {
+    // Vertical ruler marks (every 50px scaled)
+    for (let y = 0; y <= CANVAS_HEIGHT; y += 50 * scale) {
       verticalMarks.push(
         <g key={`v-mark-${y}`}>
           <line
@@ -164,7 +174,7 @@ const EditorCanvas: React.FC = () => {
             fontSize="8"
             fontFamily="Inter"
           >
-            {y}
+            {Math.round(y / scale)}
           </text>
         </g>
       );
@@ -206,13 +216,13 @@ const EditorCanvas: React.FC = () => {
   }
 
   return (
-    <div className="flex-1 bg-dark-bronze p-8 overflow-auto">
+    <div className="flex-1 bg-dark-bronze p-4 sm:p-8 overflow-auto">
       {/* Canvas Controls */}
       <div className="flex justify-center mb-4">
-        <div className="flex items-center space-x-2 bg-cracked-porcelain/95 backdrop-blur-md rounded-xl p-2 border border-brass/30">
+        <div className="flex items-center space-x-1 sm:space-x-2 bg-cracked-porcelain/95 backdrop-blur-md rounded-xl p-2 border border-brass/30">
           <button
             onClick={() => setShowGrid(!showGrid)}
-            className={`flex items-center space-x-1 px-3 py-1 rounded-lg text-sm font-medium transition-all duration-300 ${
+            className={`flex items-center space-x-1 px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
               showGrid
                 ? 'bg-brass-gradient text-white shadow-brass'
                 : 'text-dark-bronze hover:bg-brass/10'
@@ -220,12 +230,12 @@ const EditorCanvas: React.FC = () => {
             title="Toggle Grid"
           >
             <Grid className="h-4 w-4" />
-            <span>Grid</span>
+            <span className="hidden sm:inline">Grid</span>
           </button>
           
           <button
             onClick={() => setShowMargins(!showMargins)}
-            className={`flex items-center space-x-1 px-3 py-1 rounded-lg text-sm font-medium transition-all duration-300 ${
+            className={`flex items-center space-x-1 px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
               showMargins
                 ? 'bg-gradient-to-r from-neon-cyan to-brass text-white shadow-cyan-glow'
                 : 'text-dark-bronze hover:bg-brass/10'
@@ -233,12 +243,12 @@ const EditorCanvas: React.FC = () => {
             title="Toggle Safe Area"
           >
             {showMargins ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-            <span>Safe Area</span>
+            <span className="hidden sm:inline">Safe Area</span>
           </button>
           
           <button
             onClick={() => setShowRulers(!showRulers)}
-            className={`flex items-center space-x-1 px-3 py-1 rounded-lg text-sm font-medium transition-all duration-300 ${
+            className={`flex items-center space-x-1 px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
               showRulers
                 ? 'bg-brass-gradient text-white shadow-brass'
                 : 'text-dark-bronze hover:bg-brass/10'
@@ -246,7 +256,7 @@ const EditorCanvas: React.FC = () => {
             title="Toggle Rulers"
           >
             <Ruler className="h-4 w-4" />
-            <span>Rulers</span>
+            <span className="hidden sm:inline">Rulers</span>
           </button>
         </div>
       </div>
@@ -274,7 +284,7 @@ const EditorCanvas: React.FC = () => {
           {/* Page Title */}
           <div className="absolute top-4 left-4 right-4 z-10">
             <div className="bg-brass-gradient px-4 py-2 rounded-lg shadow-brass">
-              <h2 className="text-white font-cinzel font-bold text-lg">{activePage.title}</h2>
+              <h2 className="text-white font-cinzel font-bold text-sm sm:text-lg">{activePage.title}</h2>
             </div>
           </div>
 
@@ -299,6 +309,7 @@ const EditorCanvas: React.FC = () => {
                 marginSize={showMargins ? MARGIN_SIZE : 0}
                 canvasWidth={CANVAS_WIDTH}
                 canvasHeight={CANVAS_HEIGHT}
+                scale={scale}
               />
             ))}
 
@@ -316,7 +327,7 @@ const EditorCanvas: React.FC = () => {
                       </svg>
                     </motion.div>
                   </div>
-                  <p className="font-inter">Click a tool to add components</p>
+                  <p className="font-inter text-sm sm:text-base">Click a tool to add components</p>
                 </div>
               </div>
             )}
