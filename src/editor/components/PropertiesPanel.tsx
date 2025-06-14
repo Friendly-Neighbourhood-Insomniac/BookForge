@@ -33,7 +33,19 @@ const PropertiesPanel: React.FC = () => {
 
   const handleComponentUpdate = (field: string, value: any) => {
     if (selectedComponent) {
-      updateComponent(selectedComponent.id, { [field]: value });
+      // Handle nested property updates
+      if (field.startsWith('position.') || field.startsWith('size.') || field.startsWith('props.')) {
+        const [parent, child] = field.split('.');
+        const updates = {
+          [parent]: {
+            ...selectedComponent[parent as keyof typeof selectedComponent],
+            [child]: value
+          }
+        };
+        updateComponent(selectedComponent.id, updates);
+      } else {
+        updateComponent(selectedComponent.id, { [field]: value });
+      }
     }
   };
 
@@ -259,8 +271,8 @@ const PropertiesPanel: React.FC = () => {
                   <label className="block text-xs font-medium text-dark-bronze/70 mb-1 font-inter">X</label>
                   <input
                     type="number"
-                    value={Math.round(selectedComponent.x)}
-                    onChange={(e) => handleComponentUpdate('x', parseInt(e.target.value) || 0)}
+                    value={Math.round(selectedComponent.position.x)}
+                    onChange={(e) => handleComponentUpdate('position.x', parseInt(e.target.value) || 0)}
                     className="w-full px-2 py-1 border border-brass/30 rounded text-sm focus:ring-1 focus:ring-brass bg-white"
                   />
                 </div>
@@ -268,8 +280,8 @@ const PropertiesPanel: React.FC = () => {
                   <label className="block text-xs font-medium text-dark-bronze/70 mb-1 font-inter">Y</label>
                   <input
                     type="number"
-                    value={Math.round(selectedComponent.y)}
-                    onChange={(e) => handleComponentUpdate('y', parseInt(e.target.value) || 0)}
+                    value={Math.round(selectedComponent.position.y)}
+                    onChange={(e) => handleComponentUpdate('position.y', parseInt(e.target.value) || 0)}
                     className="w-full px-2 py-1 border border-brass/30 rounded text-sm focus:ring-1 focus:ring-brass bg-white"
                   />
                 </div>
@@ -281,8 +293,8 @@ const PropertiesPanel: React.FC = () => {
                   <label className="block text-xs font-medium text-dark-bronze/70 mb-1 font-inter">Width</label>
                   <input
                     type="number"
-                    value={selectedComponent.width}
-                    onChange={(e) => handleComponentUpdate('width', parseInt(e.target.value) || 100)}
+                    value={selectedComponent.size.width}
+                    onChange={(e) => handleComponentUpdate('size.width', parseInt(e.target.value) || 100)}
                     className="w-full px-2 py-1 border border-brass/30 rounded text-sm focus:ring-1 focus:ring-brass bg-white"
                   />
                 </div>
@@ -290,11 +302,23 @@ const PropertiesPanel: React.FC = () => {
                   <label className="block text-xs font-medium text-dark-bronze/70 mb-1 font-inter">Height</label>
                   <input
                     type="number"
-                    value={selectedComponent.height}
-                    onChange={(e) => handleComponentUpdate('height', parseInt(e.target.value) || 100)}
+                    value={selectedComponent.size.height}
+                    onChange={(e) => handleComponentUpdate('size.height', parseInt(e.target.value) || 100)}
                     className="w-full px-2 py-1 border border-brass/30 rounded text-sm focus:ring-1 focus:ring-brass bg-white"
                   />
                 </div>
+              </div>
+
+              {/* Z-Index */}
+              <div>
+                <label className="block text-xs font-medium text-dark-bronze/70 mb-1 font-inter">Layer</label>
+                <input
+                  type="number"
+                  value={selectedComponent.zIndex}
+                  onChange={(e) => handleComponentUpdate('zIndex', parseInt(e.target.value) || 1)}
+                  className="w-full px-2 py-1 border border-brass/30 rounded text-sm focus:ring-1 focus:ring-brass bg-white"
+                  min="1"
+                />
               </div>
 
               {/* Type-specific properties */}
@@ -304,8 +328,8 @@ const PropertiesPanel: React.FC = () => {
                     <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">Content</label>
                     <textarea
                       rows={3}
-                      value={selectedComponent.content || ''}
-                      onChange={(e) => handleComponentUpdate('content', e.target.value)}
+                      value={selectedComponent.props.content || ''}
+                      onChange={(e) => handleComponentUpdate('props.content', e.target.value)}
                       className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white resize-none"
                       placeholder="Enter text content"
                     />
@@ -314,8 +338,8 @@ const PropertiesPanel: React.FC = () => {
                     <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">Font Size</label>
                     <input
                       type="number"
-                      value={selectedComponent.fontSize || 16}
-                      onChange={(e) => handleComponentUpdate('fontSize', parseInt(e.target.value) || 16)}
+                      value={selectedComponent.props.fontSize || 16}
+                      onChange={(e) => handleComponentUpdate('props.fontSize', parseInt(e.target.value) || 16)}
                       className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white"
                       min="8"
                       max="72"
@@ -329,8 +353,8 @@ const PropertiesPanel: React.FC = () => {
                   <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">Image URL</label>
                   <input
                     type="url"
-                    value={selectedComponent.imageUrl || ''}
-                    onChange={(e) => handleComponentUpdate('imageUrl', e.target.value)}
+                    value={selectedComponent.props.imageUrl || ''}
+                    onChange={(e) => handleComponentUpdate('props.imageUrl', e.target.value)}
                     className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white"
                     placeholder="Enter image URL"
                   />
@@ -347,8 +371,8 @@ const PropertiesPanel: React.FC = () => {
                     <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">Label</label>
                     <input
                       type="text"
-                      value={selectedComponent.qrLabel || ''}
-                      onChange={(e) => handleComponentUpdate('qrLabel', e.target.value)}
+                      value={selectedComponent.props.qrLabel || ''}
+                      onChange={(e) => handleComponentUpdate('props.qrLabel', e.target.value)}
                       className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white"
                       placeholder="QR Code label"
                     />
@@ -357,8 +381,8 @@ const PropertiesPanel: React.FC = () => {
                     <label className="block text-xs font-medium text-dark-bronze/70 mb-2 font-inter">Target URL</label>
                     <input
                       type="url"
-                      value={selectedComponent.qrTarget || ''}
-                      onChange={(e) => handleComponentUpdate('qrTarget', e.target.value)}
+                      value={selectedComponent.props.qrTarget || ''}
+                      onChange={(e) => handleComponentUpdate('props.qrTarget', e.target.value)}
                       className="w-full px-3 py-2 border border-brass/30 rounded-lg text-sm focus:ring-2 focus:ring-brass focus:border-brass transition-colors bg-white"
                       placeholder="https://example.com"
                     />

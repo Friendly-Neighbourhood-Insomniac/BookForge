@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -10,32 +10,26 @@ import {
   Cog,
   CheckCircle,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Undo,
+  Redo
 } from 'lucide-react';
 import { useEditorStore } from '../../store/editorStore';
 
 const EditorHeader: React.FC = () => {
-  const { project, unsavedChanges, markSaved, setLoading } = useEditorStore();
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const { 
+    project, 
+    unsavedChanges, 
+    saveStatus,
+    saveProjectToSupabase,
+    undo,
+    redo,
+    undoStack,
+    redoStack
+  } = useEditorStore();
 
-  const handleSave = async () => {
-    setSaveStatus('saving');
-    setLoading(true);
-    
-    try {
-      // Simulate save to Supabase
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      markSaved();
-      setSaveStatus('saved');
-      
-      // Reset status after 2 seconds
-      setTimeout(() => setSaveStatus('idle'), 2000);
-    } catch (error) {
-      setSaveStatus('error');
-      setTimeout(() => setSaveStatus('idle'), 3000);
-    } finally {
-      setLoading(false);
-    }
+  const handleSave = () => {
+    saveProjectToSupabase();
   };
 
   const getSaveButtonContent = () => {
@@ -68,6 +62,17 @@ const EditorHeader: React.FC = () => {
             <span>Save</span>
           </>
         );
+    }
+  };
+
+  const getSaveButtonStyle = () => {
+    switch (saveStatus) {
+      case 'saved':
+        return 'bg-gradient-to-r from-green-500 to-green-600 text-white';
+      case 'error':
+        return 'bg-gradient-to-r from-red-500 to-red-600 text-white';
+      default:
+        return 'bg-brass-gradient hover:shadow-cyan-glow text-white';
     }
   };
 
@@ -105,6 +110,39 @@ const EditorHeader: React.FC = () => {
             </div>
           </div>
 
+          {/* Center Section - Undo/Redo */}
+          <div className="flex items-center space-x-2">
+            <motion.button
+              onClick={undo}
+              disabled={undoStack.length === 0}
+              className={`p-2 rounded-lg transition-colors ${
+                undoStack.length > 0
+                  ? 'text-dark-bronze hover:text-brass hover:bg-brass/10'
+                  : 'text-dark-bronze/30 cursor-not-allowed'
+              }`}
+              title="Undo (Ctrl+Z)"
+              whileHover={undoStack.length > 0 ? { scale: 1.1 } : {}}
+              whileTap={undoStack.length > 0 ? { scale: 0.9 } : {}}
+            >
+              <Undo className="h-5 w-5" />
+            </motion.button>
+            
+            <motion.button
+              onClick={redo}
+              disabled={redoStack.length === 0}
+              className={`p-2 rounded-lg transition-colors ${
+                redoStack.length > 0
+                  ? 'text-dark-bronze hover:text-brass hover:bg-brass/10'
+                  : 'text-dark-bronze/30 cursor-not-allowed'
+              }`}
+              title="Redo (Ctrl+Y)"
+              whileHover={redoStack.length > 0 ? { scale: 1.1 } : {}}
+              whileTap={redoStack.length > 0 ? { scale: 0.9 } : {}}
+            >
+              <Redo className="h-5 w-5" />
+            </motion.button>
+          </div>
+
           {/* Right Section */}
           <div className="flex items-center space-x-3">
             <button className="p-2 text-dark-bronze hover:text-brass transition-colors rounded-lg hover:bg-brass/10">
@@ -122,13 +160,7 @@ const EditorHeader: React.FC = () => {
             <motion.button
               onClick={handleSave}
               disabled={saveStatus === 'saving'}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 shadow-brass border-2 border-brass-light/50 ${
-                saveStatus === 'saved'
-                  ? 'bg-gradient-to-r from-green-500 to-green-600 text-white'
-                  : saveStatus === 'error'
-                  ? 'bg-gradient-to-r from-red-500 to-red-600 text-white'
-                  : 'bg-brass-gradient hover:shadow-cyan-glow text-white'
-              }`}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 shadow-brass border-2 border-brass-light/50 ${getSaveButtonStyle()}`}
               whileHover={{ scale: saveStatus === 'saving' ? 1 : 1.05 }}
               whileTap={{ scale: saveStatus === 'saving' ? 1 : 0.95 }}
             >

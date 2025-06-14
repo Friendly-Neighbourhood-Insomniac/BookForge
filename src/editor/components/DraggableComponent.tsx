@@ -20,8 +20,10 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({
   const handleDragEnd = (event: any, info: any) => {
     setIsDragging(false);
     updateComponent(component.id, {
-      x: Math.max(0, component.x + info.offset.x),
-      y: Math.max(0, component.y + info.offset.y)
+      position: {
+        x: Math.max(0, component.position.x + info.offset.x),
+        y: Math.max(0, component.position.y + info.offset.y)
+      }
     });
   };
 
@@ -31,10 +33,10 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({
         return (
           <div
             className="w-full h-full p-2 bg-transparent border-2 border-transparent rounded cursor-text"
-            style={{ fontSize: component.fontSize || 16 }}
+            style={{ fontSize: component.props.fontSize || 16 }}
           >
             <div className="text-dark-bronze font-inter">
-              {component.content || 'New text'}
+              {component.props.content || 'New text'}
             </div>
           </div>
         );
@@ -42,9 +44,9 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({
       case 'image':
         return (
           <div className="w-full h-full bg-gray-200 rounded border-2 border-transparent overflow-hidden">
-            {component.imageUrl ? (
+            {component.props.imageUrl ? (
               <img
-                src={component.imageUrl}
+                src={component.props.imageUrl}
                 alt="Component"
                 className="w-full h-full object-cover"
                 draggable={false}
@@ -62,7 +64,7 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({
           <div className="w-full h-full bg-white rounded border-2 border-gray-300 flex flex-col items-center justify-center p-2">
             <QrCode className="h-16 w-16 text-dark-bronze mb-2" />
             <span className="text-xs text-dark-bronze text-center font-inter">
-              {component.qrLabel || 'QR Code'}
+              {component.props.qrLabel || 'QR Code'}
             </span>
           </div>
         );
@@ -76,10 +78,11 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({
     <motion.div
       className={`absolute cursor-move group ${isSelected ? 'z-20' : 'z-10'}`}
       style={{
-        left: component.x,
-        top: component.y,
-        width: component.width,
-        height: component.height
+        left: component.position.x,
+        top: component.position.y,
+        width: component.size.width,
+        height: component.size.height,
+        zIndex: component.zIndex
       }}
       drag
       dragMomentum={false}
