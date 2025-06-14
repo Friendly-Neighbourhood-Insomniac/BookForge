@@ -186,7 +186,7 @@ const DashboardPage: React.FC = () => {
                     className={`p-2 rounded-lg transition-all duration-300 ${
                       viewMode === 'grid'
                         ? 'bg-brass-gradient shadow-brass text-white'
-                        : 'text-dark-bronze/60 hover:text-neon-cyan hover:bg-glass-gradient'
+                        : 'text-dark-bronze hover:text-neon-cyan hover:bg-glass-gradient'
                     }`}
                   >
                     <Grid className="h-4 w-4" />
@@ -196,7 +196,7 @@ const DashboardPage: React.FC = () => {
                     className={`p-2 rounded-lg transition-all duration-300 ${
                       viewMode === 'list'
                         ? 'bg-brass-gradient shadow-brass text-white'
-                        : 'text-dark-bronze/60 hover:text-neon-cyan hover:bg-glass-gradient'
+                        : 'text-dark-bronze hover:text-neon-cyan hover:bg-glass-gradient'
                     }`}
                   >
                     <List className="h-4 w-4" />
@@ -341,7 +341,7 @@ const DashboardPage: React.FC = () => {
                       )}
                     </div>
                     
-                    <p className="text-sm text-dark-bronze/60 capitalize font-inter mb-3">
+                    <p className="text-sm text-dark-bronze/70 capitalize font-inter mb-3">
                       {project.project_type}
                     </p>
                     
@@ -360,7 +360,7 @@ const DashboardPage: React.FC = () => {
                     
                     {/* Project Meta */}
                     <div className="mb-4">
-                      <p className="text-xs text-dark-bronze/50 font-inter">
+                      <p className="text-xs text-dark-bronze/60 font-inter">
                         Updated: {new Date(project.updated_at).toLocaleDateString()}
                       </p>
                     </div>

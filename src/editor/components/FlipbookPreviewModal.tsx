@@ -196,7 +196,7 @@ const FlipbookPreviewModal: React.FC<FlipbookPreviewModalProps> = ({
               left: '50%',
               transform: 'translate(-50%, -50%)',
               textAlign: 'center',
-              color: 'rgba(30, 30, 30, 0.4)',
+              color: '#1e1e1e',
               fontFamily: 'Inter, sans-serif',
             }}>
               <div style={{
@@ -212,7 +212,7 @@ const FlipbookPreviewModal: React.FC<FlipbookPreviewModalProps> = ({
               }}>
                 <BookOpen size={24} style={{ color: 'rgba(212, 175, 55, 0.6)' }} />
               </div>
-              <p>Empty page</p>
+              <p style={{ fontWeight: '600' }}>Empty page</p>
             </div>
           )}
         </div>
@@ -223,12 +223,13 @@ const FlipbookPreviewModal: React.FC<FlipbookPreviewModalProps> = ({
           bottom: '16px',
           right: '16px',
           fontSize: '12px',
-          color: 'rgba(30, 30, 30, 0.6)',
+          color: '#1e1e1e',
           fontFamily: 'Inter, sans-serif',
-          background: 'rgba(248, 249, 251, 0.8)',
+          background: 'rgba(248, 249, 251, 0.9)',
           padding: '4px 8px',
           borderRadius: '6px',
           border: '1px solid rgba(0, 234, 255, 0.2)',
+          fontWeight: '600',
         }}>
           {index + 1}
         </div>
@@ -366,10 +367,10 @@ const FlipbookPreviewModal: React.FC<FlipbookPreviewModalProps> = ({
                     <BookOpen className="h-8 w-8 text-brass/60" />
                     <div className="absolute inset-0 rounded-full border-2 border-dashed border-brass/30"></div>
                   </div>
-                  <h3 className="text-xl font-cinzel font-bold text-dark-bronze/60 mb-2">
+                  <h3 className="text-xl font-cinzel font-bold text-dark-bronze mb-2">
                     No pages to preview
                   </h3>
-                  <p className="text-dark-bronze/40 font-inter">
+                  <p className="text-dark-bronze/70 font-inter">
                     Add some pages to your book to see the flipbook preview
                   </p>
                 </FrostedGlassPanel>

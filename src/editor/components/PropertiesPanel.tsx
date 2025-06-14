@@ -235,13 +235,13 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ isOpen = true, onClos
 
           <div className="text-center py-8">
             <div className="w-16 h-16 bg-brass/20 rounded-full flex items-center justify-center mx-auto mb-4 relative">
-              <Palette className="h-8 w-8 text-brass/60" />
+              <Palette className="h-8 w-8 text-dark-bronze" />
               <div className="absolute inset-0 rounded-full border-2 border-dashed border-brass/30"></div>
             </div>
-            <p className="text-dark-bronze/60 font-inter text-sm">
+            <p className="text-dark-bronze font-inter text-sm font-medium">
               No templates available
             </p>
-            <p className="text-dark-bronze/40 font-inter text-xs mt-1">
+            <p className="text-dark-bronze/70 font-inter text-xs mt-1">
               Templates will be added in future updates
             </p>
           </div>
@@ -372,12 +372,12 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ isOpen = true, onClos
         >
           <FrostedGlassPanel className="p-8 text-center" glowColor="aurora" hasGearCorner>
             <div className="w-16 h-16 bg-brass/20 rounded-full flex items-center justify-center mx-auto mb-4 relative">
-              <Settings className="h-8 w-8 text-brass/60" />
+              <Settings className="h-8 w-8 text-dark-bronze" />
               <div className="absolute inset-0 rounded-full">
                 <Cog className="h-4 w-4 text-brass/40 absolute top-0 right-0 animate-spin-slow" />
               </div>
             </div>
-            <p className="font-inter text-dark-bronze/60">Select a component to edit its properties</p>
+            <p className="font-inter text-dark-bronze font-medium">Select a component to edit its properties</p>
           </FrostedGlassPanel>
         </motion.div>
       )}

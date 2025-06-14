@@ -289,9 +289,9 @@ const PreviewPage: React.FC = () => {
                     <div className="h-full flex items-center justify-center">
                       <FrostedGlassPanel className="p-8 text-center" glowColor="aurora">
                         <div className="w-16 h-16 bg-brass/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <BookOpen className="h-8 w-8 text-brass/60" />
+                          <BookOpen className="h-8 w-8 text-dark-bronze" />
                         </div>
-                        <p className="text-dark-bronze/60 font-inter">
+                        <p className="text-dark-bronze font-inter font-semibold">
                           This page is empty
                         </p>
                       </FrostedGlassPanel>
@@ -302,11 +302,11 @@ const PreviewPage: React.FC = () => {
             ) : (
               <div className="h-full flex items-center justify-center">
                 <FrostedGlassPanel className="p-8 text-center" glowColor="aurora">
-                  <BookOpen className="h-16 w-16 text-brass/60 mx-auto mb-4" />
-                  <h3 className="text-2xl font-cinzel font-bold text-dark-bronze/60 mb-4">
+                  <BookOpen className="h-16 w-16 text-dark-bronze mx-auto mb-4" />
+                  <h3 className="text-2xl font-cinzel font-bold text-dark-bronze mb-4">
                     No Content
                   </h3>
-                  <p className="text-dark-bronze/60 font-inter">
+                  <p className="text-dark-bronze font-inter">
                     This book doesn't have any pages yet
                   </p>
                 </FrostedGlassPanel>

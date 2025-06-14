@@ -32,7 +32,7 @@ const CrystalButton: React.FC<CrystalButtonProps> = ({
         `;
       case 'ghost':
         return `
-          bg-glass-gradient hover:bg-frost-texture text-porcelain 
+          bg-glass-gradient hover:bg-frost-texture text-dark-bronze 
           border border-glass-white/20 hover:border-neon-cyan/40 
           shadow-frost-glass hover:shadow-cyan-glow
         `;
