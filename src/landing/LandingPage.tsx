@@ -132,7 +132,7 @@ const LandingPage: React.FC = () => {
                   <img 
                     src="/src/components/ClockEdUI/Icons/TextBook_Icon.png" 
                     alt="Textbook Icon" 
-                    className="w-12 h-12 object-contain"
+                    className="w-24 h-24 object-contain"
                   />
                 </div>
                 
