@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { BookOpen, Plus, Search, Filter, Grid, List, LogOut, Cog, Settings, Sparkles, Edit, Eye, Trash2 } from 'lucide-react';
+import { BookOpen, Plus, Search, Filter, Grid, List, LogOut, Cog, Settings, Sparkles, Edit, Eye, Trash2, ChevronRight } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import { Session } from '@supabase/supabase-js';
 
@@ -19,6 +19,15 @@ const DashboardPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const navigate = useNavigate();
+
+  // Helper function to calculate project timeline percentage
+  const calculateTimeline = (createdAt: string) => {
+    const created = new Date(createdAt);
+    const now = new Date();
+    const daysSinceCreation = Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+    // Return a percentage based on days (max 100% at 30 days)
+    return Math.min((daysSinceCreation / 30) * 100, 100);
+  };
 
   // Get session and set up auth listener
   useEffect(() => {
@@ -155,6 +164,13 @@ const DashboardPage: React.FC = () => {
                 </div>
                 <span className="text-2xl font-cinzel font-bold text-dark-bronze">ClockEd-In BookForge</span>
               </div>
+              
+              {/* Breadcrumb Trail */}
+              <div className="flex items-center text-sm text-brass font-inter">
+                <Link to="/" className="hover:text-neon-cyan">Forge</Link>
+                <ChevronRight className="h-3 w-3 mx-2" />
+                <span className="text-dark-bronze">My Books</span>
+              </div>
             </div>
             
             <div className="flex items-center space-x-4">
@@ -198,13 +214,14 @@ const DashboardPage: React.FC = () => {
                 )}
               </button>
               
-              {/* Logout Button */}
+              {/* Animated Logout Button */}
               <button
                 onClick={handleLogout}
-                className="p-3 bg-porcelain-gradient hover:bg-brass/10 text-dark-bronze rounded-xl shadow-porcelain border border-brass/20 transition-all duration-300 hover:shadow-brass-glow hover:text-brass-dark"
+                className="group p-3 bg-porcelain-gradient hover:bg-brass/10 text-dark-bronze rounded-xl shadow-porcelain border border-brass/20 transition-all duration-300 hover:shadow-brass-glow hover:text-brass-dark relative"
                 title="Logout"
               >
-                <LogOut className="h-5 w-5" />
+                <LogOut className="h-5 w-5 transition-transform group-hover:rotate-90" />
+                <span className="absolute top-0 right-0 w-3 h-3 bg-neon-cyan rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
               </button>
             </div>
           </div>
@@ -225,7 +242,7 @@ const DashboardPage: React.FC = () => {
               <div className="inline-block bg-brass-gradient px-8 py-3 rounded-full mb-6 shadow-brass-glow relative">
                 <h1 className="text-3xl md:text-4xl font-cinzel font-bold text-white">My Books</h1>
                 <div className="absolute -left-2 top-1/2 transform -translate-y-1/2">
-                  <Settings className="h-5 w-5 text-brass-light animate-spin-slow" style={{ animationDirection: 'reverse' }} />
+                  <Settings className="h-5 w-5 text-brass-light animate-reverse-spin" />
                 </div>
                 <div className="absolute -right-2 top-1/2 transform -translate-y-1/2">
                   <Cog className="h-5 w-5 text-brass-light animate-spin-slow" />
@@ -241,7 +258,7 @@ const DashboardPage: React.FC = () => {
                 <p className="text-porcelain/80 font-inter">Loading your books...</p>
               </div>
             ) : projects.length === 0 ? (
-              /* Empty State */
+              /* Enhanced Empty State with Themed Elements */
               <div className="text-center py-16">
                 <div className="max-w-2xl mx-auto">
                   <div className="bg-cracked-porcelain/95 backdrop-blur-md rounded-3xl p-12 shadow-porcelain border-4 border-brass/30 relative overflow-hidden group">
@@ -250,12 +267,16 @@ const DashboardPage: React.FC = () => {
                     <div className="absolute top-0 left-1/3 w-px h-full bg-gradient-to-b from-neon-cyan/20 via-transparent to-neon-cyan/20"></div>
                     <div className="absolute top-1/3 right-1/4 w-full h-px bg-gradient-to-r from-transparent via-neon-cyan/15 to-transparent"></div>
                     
+                    {/* Themed Pipe/Steam Elements */}
+                    <div className="absolute -top-8 left-1/4 h-24 w-8 bg-brass-gradient opacity-30 rounded-t-lg"></div>
+                    <div className="absolute bottom-12 right-8 h-16 w-16 bg-gray-400 rounded-full opacity-20"></div>
+                    
                     {/* Floating Gears */}
                     <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity">
                       <Cog className="h-16 w-16 text-brass animate-spin-slow" />
                     </div>
                     <div className="absolute bottom-6 left-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                      <Settings className="h-12 w-12 text-neon-cyan animate-spin-slow" style={{ animationDirection: 'reverse' }} />
+                      <Settings className="h-12 w-12 text-neon-cyan animate-reverse-spin" />
                     </div>
                     
                     <div className="relative z-10">
@@ -299,7 +320,7 @@ const DashboardPage: React.FC = () => {
                 </div>
               </div>
             ) : (
-              /* Projects Grid */
+              /* Enhanced Projects Grid with Timeline Gauges */
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {projects.map((project) => (
                   <div
@@ -325,6 +346,19 @@ const DashboardPage: React.FC = () => {
                           <p className="text-sm text-dark-bronze/60 capitalize font-inter">
                             {project.project_type}
                           </p>
+                        </div>
+                      </div>
+                      
+                      {/* Project Timeline Gauge */}
+                      <div className="mb-4 flex items-center">
+                        <div className="w-full bg-brass/20 rounded-full h-2 mr-3">
+                          <div 
+                            className="bg-gradient-to-r from-brass to-neon-cyan h-2 rounded-full transition-all duration-300" 
+                            style={{width: `${calculateTimeline(project.created_at)}%`}}
+                          ></div>
+                        </div>
+                        <div className="relative" title="Project age">
+                          <Cog className="h-4 w-4 text-brass animate-spin-slow" />
                         </div>
                       </div>
                       

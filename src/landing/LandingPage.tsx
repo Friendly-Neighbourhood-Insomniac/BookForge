@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Cog, Settings, Sparkles, ArrowRight, Play, Users, Zap } from 'lucide-react';
+import { BookOpen, Cog, Settings, Sparkles, ArrowRight, Play, Users, Zap, ChevronRight } from 'lucide-react';
 
 const LandingPage: React.FC = () => {
   return (
@@ -20,13 +20,18 @@ const LandingPage: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-dark-bronze via-brass-dark to-dark-bronze"></div>
         </video>
         
-        {/* Video Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-dark-bronze/40 via-transparent to-dark-bronze/60 z-10"></div>
+        {/* Enhanced Video Overlay with Steam Effects */}
+        <div className="absolute inset-0 bg-gradient-to-b from-dark-bronze/40 via-transparent to-dark-bronze/60 z-10">
+          <div className="absolute top-20 left-[10%] w-40 h-40 bg-white/5 rounded-full filter blur-xl animate-puff"></div>
+          <div className="absolute bottom-10 right-[15%] w-32 h-32 bg-amber-300/10 rounded-full filter blur-xl animate-puff" style={{ animationDelay: '700ms' }}></div>
+        </div>
         
         {/* Hero Content */}
         <div className="relative z-30 text-center px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-          {/* Logo */}
-          <div className="mb-8 animate-float">
+          {/* Interactive Logo with Rotating Gears */}
+          <div className="mb-8 animate-float relative">
+            <Cog className="absolute -top-4 -left-4 w-16 h-16 text-brass/80 animate-spin-slow" />
+            <Cog className="absolute -bottom-2 -right-6 w-12 h-12 text-brass/60 animate-reverse-spin" />
             <div className="inline-flex items-center justify-center w-[250px] h-[250px] bg-cracked-porcelain rounded-full shadow-porcelain border-4 border-brass/30 relative overflow-hidden p-4">
               <div className="absolute inset-0 bg-cracked-porcelain"></div>
               <img 
@@ -64,7 +69,7 @@ const LandingPage: React.FC = () => {
                 Gamified • Interactive • Revolutionary
               </p>
               
-              {/* CTA Buttons */}
+              {/* CTA Buttons with Pressure Gauge */}
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
                 <Link
                   to="/register"
@@ -76,6 +81,14 @@ const LandingPage: React.FC = () => {
                     <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </div>
                   <div className="absolute inset-0 rounded-2xl border-2 border-neon-cyan/0 group-hover:border-neon-cyan/50 transition-colors duration-300"></div>
+                  
+                  {/* Pressure Gauge Effect */}
+                  <div className="absolute -right-4 top-1/2 transform -translate-y-1/2">
+                    <div className="w-6 h-6 border-2 border-brass rounded-full">
+                      <div className="absolute top-1/2 left-1/2 w-1.5 h-1.5 bg-neon-cyan rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+                      <div className="absolute top-0 left-1/2 w-px h-3 bg-neon-cyan transform -translate-x-1/2 origin-bottom rotate-45 group-hover:rotate-[30deg] transition-transform"></div>
+                    </div>
+                  </div>
                 </Link>
                 
                 <Link
@@ -111,13 +124,18 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Feature Cards */}
+          {/* Animated Feature Cards */}
           <div className="grid md:grid-cols-3 gap-8">
             {/* Textbooks Card */}
             <div className="group relative bg-cracked-porcelain rounded-3xl p-8 shadow-porcelain border-4 border-brass/30 hover:border-brass/60 transition-all duration-500 transform hover:-translate-y-2 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-neon-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-40 transition-opacity">
-                <Cog className="h-8 w-8 text-brass animate-spin-slow" />
+              
+              {/* Animated Gear Mechanism */}
+              <div className="absolute -right-6 -top-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="relative">
+                  <Cog className="h-16 w-16 text-brass animate-spin-slow" />
+                  <Cog className="absolute top-3 left-3 h-10 w-10 text-brass-dark animate-reverse-spin" />
+                </div>
               </div>
               
               <div className="relative z-10 flex items-start space-x-4">
@@ -136,8 +154,13 @@ const LandingPage: React.FC = () => {
             {/* Gamification Card */}
             <div className="group relative bg-cracked-porcelain rounded-3xl p-8 shadow-porcelain border-4 border-brass/30 hover:border-neon-cyan/60 transition-all duration-500 transform hover:-translate-y-2 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-neon-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-40 transition-opacity">
-                <Settings className="h-8 w-8 text-neon-cyan animate-spin-slow" style={{ animationDirection: 'reverse' }} />
+              
+              {/* Animated Gear Mechanism */}
+              <div className="absolute -right-6 -top-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="relative">
+                  <Cog className="h-16 w-16 text-brass animate-spin-slow" />
+                  <Cog className="absolute top-3 left-3 h-10 w-10 text-brass-dark animate-reverse-spin" />
+                </div>
               </div>
               
               <div className="relative z-10 flex items-start space-x-4">
@@ -156,8 +179,10 @@ const LandingPage: React.FC = () => {
             {/* Storybooks Card - Coming Soon */}
             <div className="group relative bg-cracked-porcelain rounded-3xl p-8 shadow-porcelain border-4 border-brass/30 transition-all duration-500 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-neon-cyan/5 to-transparent opacity-50"></div>
-              <div className="absolute top-4 right-4 opacity-20">
-                <Cog className="h-8 w-8 text-brass animate-spin-slow" />
+              
+              {/* Static Gear */}
+              <div className="absolute -right-6 -top-6 opacity-20">
+                <Cog className="h-16 w-16 text-brass animate-spin-slow" />
               </div>
               
               {/* Coming Soon Banner - Fixed positioning */}
@@ -195,7 +220,7 @@ const LandingPage: React.FC = () => {
         </div>
         <div className="absolute top-0 right-1/4 transform translate-x-1/2 -translate-y-1/2">
           <div className="w-8 h-8 bg-brass-gradient rounded-full flex items-center justify-center">
-            <Settings className="h-4 w-4 text-white animate-spin-slow" style={{ animationDirection: 'reverse' }} />
+            <Settings className="h-4 w-4 text-white animate-reverse-spin" />
           </div>
         </div>
         
@@ -209,7 +234,7 @@ const LandingPage: React.FC = () => {
                   <Cog className="h-6 w-6 text-brass-light animate-spin-slow" />
                 </div>
                 <div className="absolute -right-2 top-1/2 transform -translate-y-1/2">
-                  <Settings className="h-6 w-6 text-brass-light animate-spin-slow" style={{ animationDirection: 'reverse' }} />
+                  <Settings className="h-6 w-6 text-brass-light animate-reverse-spin" />
                 </div>
               </div>
             </div>
@@ -222,7 +247,7 @@ const LandingPage: React.FC = () => {
               <div className="bg-cracked-porcelain rounded-3xl p-8 shadow-porcelain border-4 border-brass/40 relative overflow-hidden group hover:shadow-brass-glow transition-all duration-300">
                 <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity">
                   <Cog className="absolute top-4 right-4 h-12 w-12 text-brass animate-spin-slow" />
-                  <Settings className="absolute bottom-4 left-4 h-8 w-8 text-neon-cyan animate-spin-slow" style={{ animationDirection: 'reverse' }} />
+                  <Settings className="absolute bottom-4 left-4 h-8 w-8 text-neon-cyan animate-reverse-spin" />
                 </div>
                 
                 <div className="relative z-10 text-center">
@@ -242,8 +267,8 @@ const LandingPage: React.FC = () => {
             <div className="relative">
               <div className="bg-cracked-porcelain rounded-3xl p-8 shadow-porcelain border-4 border-brass/40 relative overflow-hidden group hover:shadow-brass-glow transition-all duration-300">
                 <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity">
-                  <Settings className="absolute top-4 right-4 h-12 w-12 text-neon-cyan animate-spin-slow" />
-                  <Cog className="absolute bottom-4 left-4 h-8 w-8 text-brass animate-spin-slow" style={{ animationDirection: 'reverse' }} />
+                  <Settings className="absolute top-4 right-4 h-12 w-12 text-neon-cyan animate-reverse-spin" />
+                  <Cog className="absolute bottom-4 left-4 h-8 w-8 text-brass animate-spin-slow" />
                 </div>
                 
                 <div className="relative z-10 text-center">
@@ -264,7 +289,7 @@ const LandingPage: React.FC = () => {
               <div className="bg-cracked-porcelain rounded-3xl p-8 shadow-porcelain border-4 border-brass/40 relative overflow-hidden group hover:shadow-brass-glow transition-all duration-300">
                 <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity">
                   <Cog className="absolute top-4 right-4 h-12 w-12 text-brass animate-spin-slow" />
-                  <Settings className="absolute bottom-4 left-4 h-8 w-8 text-neon-cyan animate-spin-slow" style={{ animationDirection: 'reverse' }} />
+                  <Settings className="absolute bottom-4 left-4 h-8 w-8 text-neon-cyan animate-reverse-spin" />
                 </div>
                 
                 <div className="relative z-10 text-center">
@@ -288,7 +313,7 @@ const LandingPage: React.FC = () => {
         </div>
         <div className="absolute bottom-0 right-1/3 transform translate-x-1/2 translate-y-1/2">
           <div className="w-8 h-8 bg-brass-gradient rounded-full flex items-center justify-center">
-            <Settings className="h-4 w-4 text-white animate-spin-slow" style={{ animationDirection: 'reverse' }} />
+            <Settings className="h-4 w-4 text-white animate-reverse-spin" />
           </div>
         </div>
       </section>
@@ -300,7 +325,7 @@ const LandingPage: React.FC = () => {
           <Cog className="h-24 w-24 text-neon-cyan animate-spin-slow" />
         </div>
         <div className="absolute bottom-10 right-10 opacity-20">
-          <Settings className="h-32 w-32 text-porcelain animate-spin-slow" style={{ animationDirection: 'reverse' }} />
+          <Settings className="h-32 w-32 text-porcelain animate-reverse-spin" />
         </div>
         <div className="absolute top-1/2 left-1/4 opacity-10">
           <Cog className="h-16 w-16 text-neon-cyan animate-spin-slow" />
@@ -359,7 +384,7 @@ const LandingPage: React.FC = () => {
             <div className="border-t border-brass/30 pt-8">
               <p className="text-porcelain/60 font-inter flex items-center justify-center space-x-2">
                 <span>© 2025 ClockEd-In. All rights reserved.</span>
-                <Settings className="h-4 w-4 text-brass animate-spin-slow ml-2" />
+                <Settings className="h-4 w-4 text-brass animate-reverse-spin ml-2" />
               </p>
             </div>
           </div>

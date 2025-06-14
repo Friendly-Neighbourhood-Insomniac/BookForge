@@ -21,6 +21,8 @@ export default {
         'spin-slow': 'spin 20s linear infinite',
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite alternate',
         'float': 'float 6s ease-in-out infinite',
+        'puff': 'puff 4s infinite ease-out',
+        'reverse-spin': 'reverse-spin 20s linear infinite',
       },
       keyframes: {
         'glow-pulse': {
@@ -30,6 +32,14 @@ export default {
         'float': {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-10px)' },
+        },
+        'puff': {
+          '0%': { transform: 'scale(0.8)', opacity: '0.2' },
+          '50%': { opacity: '0.4' },
+          '100%': { transform: 'scale(2)', opacity: '0' },
+        },
+        'reverse-spin': {
+          'to': { transform: 'rotate(-360deg)' },
         },
       },
       backgroundImage: {
